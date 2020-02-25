@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="夜半烟雨花千树 暮城挽歌月微凉">
@@ -44,6 +44,15 @@
 
   <title>归档 | 暮城雨烟</title>
   
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158652489-2"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-158652489-2');
+      }
+    </script>
 
 
 
@@ -98,7 +107,8 @@
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
-        <p class="site-subtitle">The Sound of Silence</p>
+        <h1 class="site-subtitle" itemprop="description">The Sound of Silence</h1>
+      
   </div>
 
   <div class="site-nav-right">
@@ -167,6 +177,7 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
 
 
     <main class="main">
@@ -188,7 +199,7 @@
 
       
     <div class="collection-year">
-      <h1 class="collection-header">2020</h1>
+      <h2 class="collection-header">2020</h2>
     </div>
 
   <article itemscope itemtype="http://schema.org/Article">
@@ -202,11 +213,11 @@
         </time>
       </div>
 
-      <h2 class="post-title">
+      <h3 class="post-title">
           <a class="post-title-link" href="/uncategorized/hello-world" itemprop="url">
             <span itemprop="name">Hello World</span>
           </a>
-      </h2>
+      </h3>
 
     </header>
   </article>
@@ -293,16 +304,16 @@
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/KuiperSirius/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;KuiperSirius&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0t1aXBlclNpcml1cy8=" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;KuiperSirius&#x2F;"><i class="fa fa-fw fa-github"></i>GitHub</span>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:summer@kixcs.com" title="E-Mail → mailto:summer@kixcs.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+        <span class="exturl" data-url="bWFpbHRvOnN1bW1lckBraXhjcy5jb20=" title="E-Mail → mailto:summer@kixcs.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</span>
       </span>
       <span class="links-of-author-item">
-        <a href="https://twitter.com/DuskAutumn" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;DuskAutumn" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+        <span class="exturl" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9EdXNrQXV0dW1u" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;DuskAutumn"><i class="fa fa-fw fa-twitter"></i>Twitter</span>
       </span>
       <span class="links-of-author-item">
-        <a href="https://www.instagram.com/minorduskwood/" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;minorduskwood&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+        <span class="exturl" data-url="aHR0cHM6Ly93d3cuaW5zdGFncmFtLmNvbS9taW5vcmR1c2t3b29kLw==" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;minorduskwood&#x2F;"><i class="fa fa-fw fa-instagram"></i>Instagram</span>
       </span>
   </div>
 
