@@ -1261,7 +1261,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #5e998a;
+  background: #78bbff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2544,11 +2544,10 @@ body {
 .post-block {
   border-radius: 12px;
 }
-.post {
-  margin-top: 60px;
-  margin-bottom: 60px;
-  border-radius: 12px;
-  padding: 25px;
-  -webkit-box-shadow: 0 0 5px rgba(202,203,203,0.5);
-  -moz-box-shadow: 0 0 5px rgba(202,203,204,0.5);
+/* 鼠标样式 */
+* {
+  cursor: url("https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/cursor/default.cur"), auto;
+}
+:link {
+  cursor: url("https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/cursor/pointer.cur"), auto;
 }
