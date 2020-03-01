@@ -23,20 +23,20 @@
     var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="随着网络技术和网络经济的发展，网络的重要性日益突出。与此同时，网络中存在的安全漏洞也在相应的增加，网络安全问题所造成的影响也越来越大，另一方面给企业和社会的影响带来了恶劣影响。据显示，DDoS攻击中，90%以上属于TCP协议栈攻击)，因此在当前大流量、分布广、隐蔽性强的DDoS攻击环境下，如何有效防范DDos攻击对维护当前网络稳定性与安全性具有重要意义。而伴随着计算机的不断普及与应用，在大规模D">
+  <meta name="description" content="一言网(Hitokoto.cn)创立于2016年，隶属于萌创Team，目前网站主要提供一句话服务。“动漫也好、小说也好、网络也好，不论在哪里，我们总会看到有那么一两个句子能穿透你的心。我们把这些句子汇聚起来，形成一言网络，以传递更多的感动。如果可以，我们希望我们没有停止服务的那一天。” 简单来说，一言指的就是一句话，可以是动漫中的台词，也可以是网络上的各种小段子。或是感动，或是开心，有或是单纯的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于网络异常流量清洗系统的若干思考">
-<meta property="og:url" content="https://blog.kixcs.com/archives/3ac5/">
+<meta property="og:title" content="Hitokoto一言API及微软必应每日壁纸API的实现">
+<meta property="og:url" content="https://blog.kixcs.com/archives/3869/">
 <meta property="og:site_name" content="暮城雨烟">
-<meta property="og:description" content="随着网络技术和网络经济的发展，网络的重要性日益突出。与此同时，网络中存在的安全漏洞也在相应的增加，网络安全问题所造成的影响也越来越大，另一方面给企业和社会的影响带来了恶劣影响。据显示，DDoS攻击中，90%以上属于TCP协议栈攻击)，因此在当前大流量、分布广、隐蔽性强的DDoS攻击环境下，如何有效防范DDos攻击对维护当前网络稳定性与安全性具有重要意义。而伴随着计算机的不断普及与应用，在大规模D">
+<meta property="og:description" content="一言网(Hitokoto.cn)创立于2016年，隶属于萌创Team，目前网站主要提供一句话服务。“动漫也好、小说也好、网络也好，不论在哪里，我们总会看到有那么一两个句子能穿透你的心。我们把这些句子汇聚起来，形成一言网络，以传递更多的感动。如果可以，我们希望我们没有停止服务的那一天。” 简单来说，一言指的就是一句话，可以是动漫中的台词，也可以是网络上的各种小段子。或是感动，或是开心，有或是单纯的">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-03T13:58:32.000Z">
-<meta property="article:modified_time" content="2020-03-01T12:23:49.816Z">
+<meta property="article:published_time" content="2020-03-01T14:22:55.000Z">
+<meta property="article:modified_time" content="2020-03-01T15:17:52.558Z">
 <meta property="article:author" content="夜阑听烟雨">
-<meta property="article:tag" content="DDoS">
+<meta property="article:tag" content="API">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://blog.kixcs.com/archives/3ac5/">
+<link rel="canonical" href="https://blog.kixcs.com/archives/3869/">
 
 
 <script id="page-configurations">
@@ -48,7 +48,7 @@
   };
 </script>
 
-  <title>关于网络异常流量清洗系统的若干思考 | 暮城雨烟</title>
+  <title>Hitokoto一言API及微软必应每日壁纸API的实现 | 暮城雨烟</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158652489-2"></script>
     <script pjax>
@@ -219,7 +219,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.kixcs.com/archives/3ac5/">
+    <link itemprop="mainEntityOfPage" href="https://blog.kixcs.com/archives/3869/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
@@ -232,7 +232,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          关于网络异常流量清洗系统的若干思考
+          Hitokoto一言API及微软必应每日壁纸API的实现
         </h2>
 
         <div class="post-meta">
@@ -241,23 +241,17 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-01-03 21:58:32" itemprop="dateCreated datePublished" datetime="2020-01-03T21:58:32+08:00">2020-01-03</time>
+              <time title="创建时间：2020-03-01 22:22:55 / 修改时间：23:17:52" itemprop="dateCreated datePublished" datetime="2020-03-01T22:22:55+08:00">2020-03-01</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-01 20:23:49" itemprop="dateModified" datetime="2020-03-01T20:23:49+08:00">2020-03-01</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/thinking/" itemprop="url" rel="index"><span itemprop="name">随想</span></a>
+                  <a href="/categories/design/" itemprop="url" rel="index"><span itemprop="name">设计</span></a>
                 </span>
             </span>
 
@@ -270,8 +264,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/archives/3ac5/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/3ac5/" itemprop="commentCount"></span>
+    <a title="disqus" href="/archives/3869/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/3869/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -281,14 +275,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.3k</span>
+              <span>5.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -301,37 +295,40 @@
 
       
         <p class="description">
-随着网络技术和网络经济的发展，网络的重要性日益突出。与此同时，网络中存在的安全漏洞也在相应的增加，网络安全问题所造成的影响也越来越大，另一方面给企业和社会的影响带来了恶劣影响。据显示，DDoS攻击中，90%以上属于TCP协议栈攻击)，因此在当前大流量、分布广、隐蔽性强的DDoS攻击环境下，如何有效防范DDos攻击对维护当前网络稳定性与安全性具有重要意义。而伴随着计算机的不断普及与应用，在大规模DDoS网络流量下，传统防范技术对服务器的防范能力已不再奏效。
+一言网(Hitokoto.cn)创立于2016年，隶属于萌创Team，目前网站主要提供一句话服务。“动漫也好、小说也好、网络也好，不论在哪里，我们总会看到有那么一两个句子能穿透你的心。我们把这些句子汇聚起来，形成一言网络，以传递更多的感动。如果可以，我们希望我们没有停止服务的那一天。”
+简单来说，一言指的就是一句话，可以是动漫中的台词，也可以是网络上的各种小段子。或是感动，或是开心，有或是单纯的回忆，与大家分享，这就是一言存在的目的。
 </p>
-
 <a id="more"></a>
 
-<p>企业传统的DDoS攻击防御方式往往只能被动的不计成本的采用不断提升服务器性能和带宽的方式来保障自己企业的正常业务所需要的资源。随着DDoS攻击的规模不断增大，攻击手段不断智能化，这种通过预留资源的方式防御DDoS攻击的效果日益不明显。因此，专业的DDoS攻击防御方案对现今的企业核心网络业务保障来说显得尤为重要。</p>
-<p>从城域网中接入的用户角度来看，在面临大量DDoS攻击的情况下，企业需要升级当前DDoS攻击防御系统，然而DDoS攻击自身的复杂性导致了企业难以独立完成对DDoS的防御；从运营商的角度来说，通过对城域网中大量的DDoS流量的过滤，可以有效减少城域网自身的负载，为城域网的业务提供有效的保障，同时也能够促进自身的发展；综上所述，在城域网侧为企业客户开展流量清洗实现对DDoS攻击的防御，可以同时满足运营商和大客户的双重需要，已经成为目前运营商的必然需求。</p>
-<p>自1999年8月第一起DDoS攻击发生以来，人们就对DDoS攻击及其对策展开了深入的研究。1999年11月，CERT/CC发表的Distributed-Systems Intruder Tools Workshop报告中，最早全面阐述了DDoS攻击的原理，并针对系统管理员、ISP、以及事件响应小组，从预防、检测、响应三方面依次给出了即时、短期、长期的解决方案。随后，SANS和Cisco Systerms等几个著名的安全组织、公司，也针对DDoS攻击的防御提出了见解。华盛顿大学的Dave Dittrich在Distributed Denial of Service(DDoS)Attacks/tools提出了最新的DDoS攻击及防御的研究资料。在攻击工具研究方面，许多DDoS攻击工具(如: Trinoo、 TFN、Stacheldraht、TFN2K、Shaft、 Mstream 等)被详细地分析。一方面为防御DDoS攻击提供重要参考，另一方面攻击者利用相关信息进一步改进攻击工具。Mixter在Tribe Flood Network 3000中对DDoS攻击工具进行了理论性的评价，并给出了网络入侵检测规则。</p>
-<p>在防御研究方面，人们从攻击前防御、攻击期间防范和攻击后防御等方面对DDoS防御措施进行了深入研究,研究的方向主要体现在攻击中的检测与过滤技术以及攻击后的攻击源追踪技术。Farguson和Senie基于DDoS攻击伪造源IP地址的特性，提出了入口报文过滤技术。该技术从理论来说，能够有效杜绝DDoS攻击，然而就实现而言，部署难度大不易实施。Park和Lee提出的基于路由报文过滤机制。该技术使用BGP信息来识别伪造源IP地址的报文。实验表明，如果采用此方案有效防范DDoS攻击，就需要在18%的Internet核心路由器上部署该机制，同样，该方案的部署仍然困难。</p>
-<p>目前，研究主要通过在受害者和ISP网络上游部署检测与过滤机制，进行攻击报文过滤。其弊端在于，当大规模的DDoS攻击发生时，该机制的防范效率明显降低。Bellovin在Internet Draft:ICMP Traceback Messages中提议，利用路由器向目的IP发送ICMP Traceback Messages重建攻击流的路径。Barros基于Bellovin的方案进行了改进，以适用于反射式DDoS攻击。</p>
-<p>2000年，Burch 和Cheswick提出通过报文记载其路由信息。路由器在报文头部(随机或确定)写入地址信息，接收方根据此报文构建路由路径。Savage等深入的研究了概率性报文标记机制，并提出地址信息标记方法。随后，Song 和Perrig提出了更为精简的报文标记算法，该算法的路径恢复更加快捷。Snoren 等提出基于Hash的IP Traceback技术，该技术利用源路径重构攻击流路径。当DDoS攻击存在大量攻击源时，IP Traceback技术追踪攻击源的效率会明显下降。在DDoS预防、攻击缓解和攻击流偏转、以及攻击记录的分析等方面，不少研究集中于网络和主机DDoS攻击下的可存活性研究以及构建DDoS攻击容忍网络。从国内外对DDoS研究的现状来看，在大规模DDoS攻击的情况下，很多DDoS防范技术的防御能力效率显著下降，攻击者通过对攻击工具的改进，很容易向目标机器发起DDoS攻击，因此DDoS防范措施还需要进一步改进。</p>
-<p>随着计算机的不断普及与应用，在大规模DDoS网络流量下，传统防范技术对服务器的防范能力已不再奏效。基于此种情况本文提出了流量清洗的方法来防范SYN Flood攻击。大量攻击者通过占用带宽和抢占资源方式致使目标服务器发生拒绝服务，进而影响了运营商和企业的正常业务。</p>
-<p>针对SYN Flood攻击隐蔽性强、规模大等特点，本文提出了流量清洗防范的思想。流量清洗防范采用层次过滤的方式，将网络总流量区分可信源流量、不可信源流量和未知源流量，并根据网络状态进行具体处理。基于用户需求，将流量清洗系统划分为功能模块和公共模块。功能模块包括统计分析模块、流牵引模块、清洗平台和半连接处理，公共模块包括特征库模块和总连接计数模块。统计分析模块进行黑名单和白名单匹配，完成对网络流量的初步过滤;流牵引模块通过设置SYN速率限值，判断是否需要对异常流量二次过滤;半连接处理接收清洗平台处理结果，建立生成动态列表信息，并更新特征库参数;总连接计数模块处理IN方向和OUT方向的报文，完成特征库全连接总数的更新。</p>
-<p>流量清洗系统基于需求设计实现后，对网络流量进行了层次过滤。从验证结果来看，系统对攻击者识别的准确率提高，同时也增强了对SYN Flood攻击的处理与防御能力。</p>
-<p>为了提高企业或运营商在遭受大量DDoS攻击时对DDoS的防御能力，流量清洗系统欲采用网络流量层次性过滤的思想，通过对整体流量进行区分处理。对设备接收的流量区分为可信源流量、未知源流量和不可信源流量，并针对三种流量依次诵过系统相关模块进行初步讨滤、二次过滤、cookie验证和建立动杰名单等外理。流量清洗系统根据用户需求将整体系统划分四个主要模块(包括统计分析模块、流牵引模块、清洗平台和半连接处理)和二个公共模块(总连接计数和特征库模块)。以下模块为论文所涉及的主要工作:</p>
-<ul>
-<li><p>在统计分析模块中将对流量进行初步过滤。对IN方向的流量，通过黑、白名单匹配，放行可信源流量。根据当前网络状态，对未知源和不可信源流量，判断是否需要对报文做丢包处理。</p>
-</li>
-<li><p>在流牵引模块中，将对进入设备的流量进行二次过滤。通过设置SYN限值判断是否对未知源流量和不可信源流量进行清洗处理。</p>
-</li>
-<li><p>在半连接处理中，将通过接收清洗平台处理结果，生成动态列表信息，包括动态白名单列表和动态黑名单列表，并更新特征库相应参数信息。</p>
-</li>
-<li><p>总连接计数模块的处理主要集中报文的IN方向和OUT方向，根据接收报文类型进行相关处理，并完成对特征库中全连接总数的更新。</p>
-</li>
-</ul>
-<p>流量清洗系统划分为功能模块和公共模块。功能模块包括统计分析模块、流牵引模块、清洗平台和半连接处理，公共模块包括特征库模块和总连接计数模块。</p>
-<p>统计分析模块从特征库中获取黑、白名单列表信息，完成刘流量区分，并依据网络状态对总体流量进行初步过滤。</p>
-<p>流牵引模块在统计分析模块处理的基础上，对网络流量进行第二次过滤。通过设置SYN限值，判断是否需要对未知源流量和不可信源流量做清洗处理。</p>
-<p>半连接处理通过接收清洗平台的处理结果，生成动态列表信息，包括动态白名单列表和动态黑名单列表，并更新特征库相应参数。</p>
-<p>总连接计数模块的处理主要集中报文的IN方向和OUT方向，通过对总连接计数模块的处理完成特征库中全连接总数的更新。</p>
+<h4 id="Hitokoto一言API"><a href="#Hitokoto一言API" class="headerlink" title="Hitokoto一言API"></a>Hitokoto一言API</h4><p>下面简单介绍本站部署Hitokoto一言API的过程：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//Ps：喜欢使用官方接口也可以前往官方的API介绍地址参考部署：https://hitokoto.cn/api</span></span><br><span class="line"><span class="comment">//获取句子文件的绝对路径</span></span><br><span class="line"><span class="comment">//如果你介意别人可能会拖走这个文本，可以将文件名自定义一下，或者通过配置文件权限，禁止Nginx拉取也行。</span></span><br><span class="line">$path = dirname(<span class="keyword">__FILE__</span>);</span><br><span class="line">$file = file($path.<span class="string">"/hitokoto.txt"</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//随机读取一行</span></span><br><span class="line">$arr  = mt_rand( <span class="number">0</span>, count( $file ) - <span class="number">1</span> );</span><br><span class="line">$content  = trim($file[$arr]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//编码判断，用于输出相应的响应头部编码</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'charset'</span>]) &amp;&amp; !<span class="keyword">empty</span>($_GET[<span class="string">'charset'</span>])) &#123;</span><br><span class="line">    $charset = $_GET[<span class="string">'charset'</span>];</span><br><span class="line">    <span class="keyword">if</span> (strcasecmp($charset,<span class="string">"gbk"</span>) == <span class="number">0</span> ) &#123;</span><br><span class="line">        $content = mb_convert_encoding($content,<span class="string">'gbk'</span>, <span class="string">'utf-8'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    $charset = <span class="string">'utf-8'</span>;</span><br><span class="line">&#125;</span><br><span class="line">header(<span class="string">"Content-Type: text/html; charset=$charset"</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//格式化判断，输出js或纯文本</span></span><br><span class="line"><span class="keyword">if</span> ($_GET[<span class="string">'format'</span>] === <span class="string">'js'</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"function hitokoto()&#123;document.write('"</span> . $content .<span class="string">"');&#125;"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> $content;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**以上代码保存为index.php，然后上传到网站根目录下的hitokoto文件夹（这个自己随机定义）即可。</span></span><br><span class="line"><span class="comment">*把hitokoto.txt上传至网站目录，并写入相应内容。</span></span><br><span class="line"><span class="comment">*尽管如此，倘若有高并发请求的业务需求，推荐使用MySQL来进行内容管理。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
 
+<p>现在，通过域名/路径就可以看到返回的结果了。[<span class="exturl" data-url="aHR0cHM6Ly9teWRvbWFpbi5jb20vaGl0b2tvdG9d" title="https://mydomain.com/hitokoto]">https://mydomain.com/hitokoto]<i class="fa fa-external-link"></i></span><br>部署方法如下所示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span> src=<span class="string">"https://你的域名/hitokoto/?format=js&amp;charset=utf-8"</span>&gt;&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;div id="hitokoto"&gt;&lt;script&gt;hitokoto()&lt;/</span>script&gt;&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="微软Bing每日壁纸API"><a href="#微软Bing每日壁纸API" class="headerlink" title="微软Bing每日壁纸API"></a>微软Bing每日壁纸API</h4><p>必应美图官方的 API 接口如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;国内版</span><br><span class="line">https:&#x2F;&#x2F;cn.bing.com&#x2F;HPImageArchive.aspx?idx&#x3D;0&amp;n&#x3D;1</span><br><span class="line">https:&#x2F;&#x2F;cn.bing.com&#x2F;HPImageArchive.aspx?format&#x3D;js&amp;idx&#x3D;0&amp;n&#x3D;1&amp;mkt&#x3D;zh-CN</span><br><span class="line">&#x2F;&#x2F;国际版[From: https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;10639914&#x2F;is-there-a-way-to-get-bings-photo-of-the-day]</span><br><span class="line">https:&#x2F;&#x2F;www.bing.com&#x2F;HPImageArchive.aspx?format&#x3D;js&amp;idx&#x3D;0&amp;n&#x3D;1</span><br><span class="line">XML: https:&#x2F;&#x2F;www.bing.com&#x2F;HPImageArchive.aspx?format&#x3D;xml&amp;idx&#x3D;0&amp;n&#x3D;1&amp;mkt&#x3D;en-US</span><br><span class="line">JSON: https:&#x2F;&#x2F;www.bing.com&#x2F;HPImageArchive.aspx?format&#x3D;js&amp;idx&#x3D;0&amp;n&#x3D;1&amp;mkt&#x3D;en-US</span><br><span class="line">RSS: https:&#x2F;&#x2F;www.bing.com&#x2F;HPImageArchive.aspx?format&#x3D;rss&amp;idx&#x3D;0&amp;n&#x3D;1&amp;mkt&#x3D;en-US</span><br></pre></td></tr></table></figure>
+
+<p>其中参数说明:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">参数名称                值含义</span><br><span class="line"></span><br><span class="line">format(非必需)      返回数据格式，未定义则默认返回XML格式</span><br><span class="line">                       •js(常使用，返回JSON格式)</span><br><span class="line">                       •xml(返回XML格式)</span><br><span class="line"></span><br><span class="line">idx(非必需)         请求图片截止天数</span><br><span class="line">                       •0(今天) </span><br><span class="line">                       •-1(截止到明天，预准备) </span><br><span class="line">                       •1(截止至昨天，最多支持获取7天前的图片) </span><br><span class="line"></span><br><span class="line">n(必需)             1-8返回请求数量，目前最多一次获取8张</span><br><span class="line"></span><br><span class="line">mkt(非必需)         国家&#x2F;地区代码</span><br><span class="line">                       •zh-CN(中国) </span><br><span class="line">                       •en-US(美国)</span><br></pre></td></tr></table></figure>
+<p>根据官方API返回的内容，对域名和url字段进行拼接即可得到图片地址。该.php文件内容如下:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> Template Name: API-BingPicture</span></span><br><span class="line"><span class="comment"> description: template for TOMORROW 星辰</span></span><br><span class="line"><span class="comment"> https://www.tomorrow.wiki/archives/453</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">if</span>(file_exists(<span class="string">"bingDaily.jpg"</span>))</span><br><span class="line">&#123;</span><br><span class="line">    $time = time();</span><br><span class="line">         </span><br><span class="line">    <span class="comment">//文件修改时间和现在时间相差 24 小时以下的话，直接导向静态文件 jpg，否则重新生成 jpg</span></span><br><span class="line">    <span class="keyword">if</span>($time - filemtime(<span class="string">"bingDaily.jpg"</span>) &lt; <span class="number">24</span>*<span class="number">60</span>*<span class="number">60</span> )</span><br><span class="line">    &#123;</span><br><span class="line">        header(<span class="string">"Location:./bingDaily.jpg"</span>);</span><br><span class="line">      	<span class="keyword">exit</span>(); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$str=file_get_contents(<span class="string">'https://cn.bing.com/HPImageArchive.aspx?idx=0&amp;n=1'</span>);</span><br><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">"/(.+?)&lt;\/url&gt;/ies"</span>, $str, $matches)) </span><br><span class="line">&#123;</span><br><span class="line">$imgurl=<span class="string">'https://cn.bing.com'</span>.$matches[<span class="number">1</span>];</span><br><span class="line">&#125;</span><br><span class="line">ob_end_clean();</span><br><span class="line">ob_start(); </span><br><span class="line">header(<span class="string">'Content-Type: image/JPEG'</span>);</span><br><span class="line">@readfile($imgurl);</span><br><span class="line">$temp =  ob_get_contents(); </span><br><span class="line">@ob_flush();</span><br><span class="line">$fp = fopen(<span class="string">"bingDaily.jpg"</span>,<span class="string">'w'</span>); </span><br><span class="line">fwrite($fp,$temp) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">'写文件错误'</span>); </span><br><span class="line">header(<span class="string">"Location:./bingDaily.jpg"</span>);</span><br><span class="line"><span class="keyword">exit</span>();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最后，附上两条集成的API(对API进行外部资源引用注意Nginx的跨域配置问题):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;已拦截跨源请求：同源策略禁止读取位于 https:&#x2F;&#x2F;api.kixcs.com&#x2F;hitokoto&#x2F;?encode&#x3D;json 的远程资源。</span><br><span class="line">（原因：CORS 头缺少 &#39;Access-Control-Allow-Origin&#39;）。</span><br><span class="line">&#x2F;&#x2F;.php文件中，开启跨域Ajax支持。</span><br><span class="line">header(&#39;Access-Control-Allow-Origin:*&#39;);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;或者Nginx配置</span><br><span class="line"> location &#x2F; &#123;</span><br><span class="line">            # 允许 所有头部 所有域 所有方法</span><br><span class="line">            add_header &#39;Access-Control-Allow-Origin&#39; &#39;*&#39;;</span><br><span class="line">            add_header &#39;Access-Control-Allow-Headers&#39; &#39;*&#39;;</span><br><span class="line">            add_header &#39;Access-Control-Allow-Methods&#39; &#39;*&#39;;</span><br><span class="line">            # OPTIONS 直接返回204</span><br><span class="line">            if ($request_method &#x3D; &#39;OPTIONS&#39;) &#123;</span><br><span class="line">                return 200;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;api.kixcs.com&#x2F;hitokoto&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;api.kixcs.com&#x2F;bing</span><br></pre></td></tr></table></figure>
+
+<h4 id="备选方法"><a href="#备选方法" class="headerlink" title="备选方法"></a>备选方法</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">define(<span class="string">'IN_HITOKOTO'</span>, <span class="keyword">TRUE</span>);</span><br><span class="line">header(<span class="string">'Content-Type: text/html; charset=UTF-8'</span>);</span><br><span class="line"><span class="comment">//开启跨域Ajax支持</span></span><br><span class="line">header(<span class="string">'Access-Control-Allow-Origin:*'</span>);</span><br><span class="line"><span class="comment">//初始化资源文件</span></span><br><span class="line">$array = file(<span class="string">'./content.php'</span>);</span><br><span class="line"><span class="comment">//参数传递</span></span><br><span class="line">$encode = $_GET[<span class="string">'encode'</span>];</span><br><span class="line">$id = $_GET[<span class="string">'id'</span>];</span><br><span class="line"><span class="comment">//一言开始行数（0为验证行）</span></span><br><span class="line">$id_min = <span class="number">1</span>;</span><br><span class="line"><span class="comment">//一言结束行数</span></span><br><span class="line">$id_max = <span class="number">3388</span>;</span><br><span class="line"><span class="comment">//随机 - 判断数字</span></span><br><span class="line"><span class="keyword">if</span> (!$id == <span class="keyword">NULL</span> &amp;&amp; is_numeric($id))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//判断大小</span></span><br><span class="line">    <span class="keyword">if</span> ($id &gt;= $id_min &amp;&amp; $id &lt;= $id_max)</span><br><span class="line">    &#123;</span><br><span class="line">        $number = $id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        $number = rand($id_min,$id_max);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    $number = rand($id_min,$id_max);</span><br><span class="line">&#125;</span><br><span class="line">$string = $array[$number];</span><br><span class="line"><span class="comment">//判断输出类型</span></span><br><span class="line"><span class="keyword">if</span> ($encode == <span class="string">'javascript'</span> || $encode == <span class="string">'js'</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'function getHitokoto()&#123;document.write("'</span>,trim($string),<span class="string">'");&#125;'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> trim($string);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用UTF-8-BOM编码（content.php），注意一言文本行数要与index.php中的$id_max匹配。</span></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">if</span>(!defined(<span class="string">'IN_HITOKOTO'</span>))&#123;<span class="keyword">echo</span> <span class="string">"Access Denied."</span>;<span class="keyword">exit</span>();&#125;;<span class="meta">?&gt;</span></span><br><span class="line">你们媒体千万要注意啊，不要“见着风，是得雨”啊。</span><br><span class="line">接到这些消息，你媒体本身也要判断，明白意思吗？</span><br><span class="line">假使这些完全……无中生有的东西，你再帮他说一遍，你等于……你也等于……你也有责任吧？</span><br><span class="line">..........</span><br><span class="line">..........</span><br></pre></td></tr></table></figure>
+
+<p>请求方式:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$id</span><br><span class="line">Normal: Random ID</span><br><span class="line">Option: $id_min ~ $id_max</span><br><span class="line">Request URL: https:&#x2F;&#x2F;api.kixcs.com&#x2F;hitokoto&#x2F;?id&#x3D;2</span><br><span class="line">Request Method: GET</span><br><span class="line">Respond:接到这些消息，你媒体本身也要判断，明白意思吗？</span><br><span class="line">(The id of this sentence is 2.)</span><br><span class="line"></span><br><span class="line">$encode</span><br><span class="line">Normal: text</span><br><span class="line">Option: javascript or js</span><br><span class="line">Request URL: https:&#x2F;&#x2F;api.kixcs.com&#x2F;hitokoto&#x2F;?encode&#x3D;js</span><br><span class="line">Request Method: GET</span><br><span class="line">Respond:function getHitokoto()&#123;document.write(&quot;我没有说要钦定，没有任何这个意思。&quot;);&#125;</span><br></pre></td></tr></table></figure>
+<p>前端页面中，使用如下代码进行调用:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span> src=<span class="string">"https://api.kixcs.com/hitokoto/?encode=javascript"</span>&gt;&lt;<span class="regexp">/script&gt; </span></span><br><span class="line"><span class="regexp">&lt;span class="getHitokoto"&gt;&lt;script&gt;getHitokoto()&lt;/</span>script&gt;&lt;<span class="regexp">/span&gt;</span></span><br></pre></td></tr></table></figure>
+<p>注意，倘若控制台出现:”Refused to execute script from because its MIME type (‘text/html’) is not executable, and strict MIME type checking is enabled.”类似错误，JS的MIME的type=”text/javascript”配置正确，则有可能是CDN引发的问题。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="comment">//github.com/rails/webpacker/issues/1651</span></span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -346,7 +343,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://blog.kixcs.com/archives/3ac5/" title="关于网络异常流量清洗系统的若干思考">https://blog.kixcs.com/archives/3ac5/</a>
+    <a href="https://blog.kixcs.com/archives/3869/" title="Hitokoto一言API及微软必应每日壁纸API的实现">https://blog.kixcs.com/archives/3869/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
@@ -357,7 +354,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/DDoS/" rel="tag"> DDoS</a>
+              <a href="/tags/API/" rel="tag"> API</a>
           </div>
 
         
@@ -366,13 +363,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/archives/4cb2/" rel="prev" title="浅析Google人工智能系统TensorFlow">
-      <i class="fa fa-chevron-left"></i> 浅析Google人工智能系统TensorFlow
+    <a href="/archives/25c7/" rel="prev" title="西方哲学史 希腊哲学 [美]弗兰克·梯利">
+      <i class="fa fa-chevron-left"></i> 西方哲学史 希腊哲学 [美]弗兰克·梯利
     </a></div>
-      <div class="post-nav-item">
-    <a href="/archives/25c7/" rel="next" title="西方哲学史 希腊哲学 [美]弗兰克·梯利">
-      西方哲学史 希腊哲学 [美]弗兰克·梯利 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -439,6 +433,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hitokoto一言API"><span class="nav-text">Hitokoto一言API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#微软Bing每日壁纸API"><span class="nav-text">微软Bing每日壁纸API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#备选方法"><span class="nav-text">备选方法</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -999,7 +994,7 @@ window.addEventListener('pjax:success', () => {
       quicklink({
         timeout: 3000,
         priority: true,
-        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/archives/3ac5/',]
+        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/archives/3869/',]
       });
       });
   </script>
@@ -1016,9 +1011,9 @@ window.addEventListener('pjax:success', () => {
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://blog.kixcs.com/archives/3ac5/";
-    this.page.identifier = "archives/3ac5/";
-    this.page.title = "关于网络异常流量清洗系统的若干思考";
+    this.page.url = "https://blog.kixcs.com/archives/3869/";
+    this.page.identifier = "archives/3869/";
+    this.page.title = "Hitokoto一言API及微软必应每日壁纸API的实现";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
