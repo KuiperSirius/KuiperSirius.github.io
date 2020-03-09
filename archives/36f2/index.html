@@ -23,17 +23,20 @@
     var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="夜半烟雨花千树 暮城挽歌月微凉">
-<meta property="og:type" content="website">
-<meta property="og:title" content="暮城雨烟">
-<meta property="og:url" content="https://blog.kixcs.com/tags/DDoS/">
+  <meta name="description" content="最早发明这个问题的人是法国数学家爱德华·卢卡斯。传说越南河内某间寺院有三根银棒，上串 64 个金盘。寺院里的僧侣依照一个古老的预言，以上述规则移动这些盘子；预言说当这些盘子移动完毕，世界就会灭亡，上述又称梵天寺之塔问题。但不知道是卢卡斯自创的这个传说，还是他受他人启发。这个传说有若干变体：寺院换成修道院、僧侣换成修士等等。寺院的地点众说纷纭，其中一说是位于越南的河内，所以被命名为“河内塔”。另外亦">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汉诺塔的递归算法">
+<meta property="og:url" content="https://blog.kixcs.com/archives/36f2/">
 <meta property="og:site_name" content="暮城雨烟">
-<meta property="og:description" content="夜半烟雨花千树 暮城挽歌月微凉">
+<meta property="og:description" content="最早发明这个问题的人是法国数学家爱德华·卢卡斯。传说越南河内某间寺院有三根银棒，上串 64 个金盘。寺院里的僧侣依照一个古老的预言，以上述规则移动这些盘子；预言说当这些盘子移动完毕，世界就会灭亡，上述又称梵天寺之塔问题。但不知道是卢卡斯自创的这个传说，还是他受他人启发。这个传说有若干变体：寺院换成修道院、僧侣换成修士等等。寺院的地点众说纷纭，其中一说是位于越南的河内，所以被命名为“河内塔”。另外亦">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-10-25T10:57:04.000Z">
+<meta property="article:modified_time" content="2020-03-09T11:40:44.104Z">
 <meta property="article:author" content="夜阑听烟雨">
+<meta property="article:tag" content="Algorithm">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://blog.kixcs.com/tags/DDoS/">
+<link rel="canonical" href="https://blog.kixcs.com/archives/36f2/">
 
 
 <script id="page-configurations">
@@ -41,11 +44,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>标签: DDoS | 暮城雨烟</title>
+  <title>汉诺塔的递归算法 | 暮城雨烟</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158652489-2"></script>
     <script pjax>
@@ -211,54 +214,162 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">DDoS
-          <small>标签</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.kixcs.com/archives/36f2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
+      <meta itemprop="name" content="夜阑听烟雨">
+      <meta itemprop="description" content="夜半烟雨花千树 暮城挽歌月微凉">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="暮城雨烟">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          汉诺塔的递归算法
         </h2>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-10-25 18:57:04" itemprop="dateCreated datePublished" datetime="2019-10-25T18:57:04+08:00">2019-10-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-09 19:40:44" itemprop="dateModified" datetime="2020-03-09T19:40:44+08:00">2020-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/thinking/" itemprop="url" rel="index"><span itemprop="name">随想</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/archives/36f2/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/36f2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h2 class="collection-header">2020</h2>
+        <p>最早发明这个问题的人是法国数学家爱德华·卢卡斯。传说越南河内某间寺院有三根银棒，上串 64 个金盘。寺院里的僧侣依照一个古老的预言，以上述规则移动这些盘子；预言说当这些盘子移动完毕，世界就会灭亡，上述又称梵天寺之塔问题。但不知道是卢卡斯自创的这个传说，还是他受他人启发。这个传说有若干变体：寺院换成修道院、僧侣换成修士等等。寺院的地点众说纷纭，其中一说是位于越南的河内，所以被命名为“河内塔”。另外亦有“金盘是创世时所造”、“僧侣们每天移动一盘”之类的背景设定。</p>
+<p class="description"></p>
+<a id="more"></a>
+
+<h4 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h4><p>汉诺塔（又称河内塔）问题是源于印度一个古老传说的益智玩具。大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着64片黄金圆盘。大梵天命令婆罗门把圆盘从下面开始按大小顺序重新摆放在另一根柱子上。并且规定，在小圆盘上不能放大圆盘，在三根柱子之间一次只能移动一个圆盘。</p>
+<h4 id="规律"><a href="#规律" class="headerlink" title="规律"></a>规律</h4><p>归纳可得，当移动的盘子为n个时，移动的次数为2^n - 1。</p>
+<h4 id="调用方法的栈机制"><a href="#调用方法的栈机制" class="headerlink" title="调用方法的栈机制"></a>调用方法的栈机制</h4><p>从主线程开始调用方法/函数进行不停的压栈和出栈操作，函数的调用就是将函数压入栈中，函数的结束就是函数出栈的过程，这样就保证了方法调用的顺序流，即当函数出现多层嵌套时，需要从外到内一层层把函数压入栈中，最后栈顶的函数先执行结束（最内层的函数先执行结束）后出栈，再倒数第二层的函数执行结束出栈，到最后，第一个进栈的函数调用结束后从栈中弹出回到主线程，并且结束。</p>
+<h4 id="递归算法的实现-Java语言描述"><a href="#递归算法的实现-Java语言描述" class="headerlink" title="递归算法的实现(Java语言描述)"></a>递归算法的实现(Java语言描述)</h4><p>实现该递归算法可以分为三步走，首先需要把n-1个盘子从A柱移到B柱(C柱作为辅助)；然后再将第n个盘子/最大的盘子从A柱移动到C柱；最后将B柱上的n-1个盘子移动到C柱上(A柱作为辅助)即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*程序目的：利用汉诺塔函数来求出不同盘子移动的步骤</span></span><br><span class="line"><span class="comment">*2019-10-24 Summer</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Summer</span></span>&#123;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args [])</span></span>&#123;</span><br><span class="line"><span class="keyword">int</span> j;</span><br><span class="line">String str;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> m =<span class="number">0</span>;<span class="comment">//标记移动次数</span></span><br><span class="line">BufferedReader keyin=<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">System.out.print(<span class="string">"请输入盘子数量:"</span>);</span><br><span class="line">str=keyin.readline();</span><br><span class="line">j=Integer.parseInt(str);</span><br><span class="line">hanoi(j,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">hanoi</span><span class="params">(<span class="keyword">int</span> n,<span class="keyword">int</span> p1,<span class="keyword">int</span> p2,<span class="keyword">int</span> p3)</span></span>&#123;</span><br><span class="line"><span class="keyword">if</span>(n==<span class="number">1</span>)&#123; <span class="comment">//圆盘仅剩一个时，直接移动到C柱。</span></span><br><span class="line"> System.out.println(<span class="string">"第"</span>+(++m)+<span class="string">"次移动，从"</span>+p1+<span class="string">"移动到"</span>+p3+<span class="string">"。"</span>)</span><br><span class="line"> &#125;<span class="keyword">else</span>&#123;<span class="comment">//递归算法分三步走</span></span><br><span class="line">  hanoi(n-<span class="number">1</span>,p1,p3,p2); <span class="comment">//hanoi(int n,int p1,int p2,int p3)中，形参p2所在的位置表示过渡参数。</span></span><br><span class="line">  System.out.println(<span class="string">"第"</span>+(++m)+<span class="string">"次移动，从"</span>+p1+<span class="string">"移动到"</span>+p3+<span class="string">"。"</span>);</span><br><span class="line">  hanoi(n-<span class="number">1</span>,p2,p1,p3);</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
+        
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-01-03T21:58:32+08:00"
-              content="2020-01-03">
-          01-03
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>夜阑听烟雨
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.kixcs.com/archives/36f2/" title="汉诺塔的递归算法">https://blog.kixcs.com/archives/36f2/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <h3 class="post-title">
-          <a class="post-title-link" href="/archives/3ac5/" itemprop="url">
-            <span itemprop="name">关于网络异常流量清洗系统的若干思考</span>
-          </a>
-      </h3>
 
-    </header>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Algorithm/" rel="tag"> Algorithm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/83a8/" rel="prev" title="Kotlin容器,泛型及高阶函数应用">
+      <i class="fa fa-chevron-left"></i> Kotlin容器,泛型及高阶函数应用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/4cb2/" rel="next" title="浅析Google人工智能系统TensorFlow">
+      浅析Google人工智能系统TensorFlow <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -305,6 +416,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#描述"><span class="nav-text">描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#规律"><span class="nav-text">规律</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调用方法的栈机制"><span class="nav-text">调用方法的栈机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#递归算法的实现-Java语言描述"><span class="nav-text">递归算法的实现(Java语言描述)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -865,7 +977,7 @@ window.addEventListener('pjax:success', () => {
       quicklink({
         timeout: 3000,
         priority: true,
-        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/tags/DDoS/',]
+        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/archives/36f2/',]
       });
       });
   </script>
@@ -879,6 +991,26 @@ window.addEventListener('pjax:success', () => {
   }
   // defer loading until the whole page loading is completed
   window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://blog.kixcs.com/archives/36f2/";
+    this.page.identifier = "archives/36f2/";
+    this.page.title = "汉诺塔的递归算法";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://kixcs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
 
 
