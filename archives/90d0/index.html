@@ -23,17 +23,20 @@
     var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="夜半烟雨花千树 暮城挽歌月微凉">
-<meta property="og:type" content="website">
-<meta property="og:title" content="暮城雨烟">
-<meta property="og:url" content="https://blog.kixcs.com/categories/literature/">
+  <meta name="description" content="在谈论DNS流媒体解锁所需的SNI代理服务器之前，先来回顾和了解下通常情况下DNS请求发出之后的整个生命周期。首先，在客户端发出基于UDP协议53端口的DNS请求后，浏览器DNS缓存机制会率先寻找本地的缓存。假如未命中缓存则调用操作系统的getaddrinfo()系统函数，向操作系统寻求解析结果。倘若操作系统的DNS缓存依旧无法响应请求，则计算机向配置的上游DNS服务器发送请求，DNS服务器经历">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析DNS流媒体解锁在代理环境中的应用">
+<meta property="og:url" content="https://blog.kixcs.com/archives/90d0/">
 <meta property="og:site_name" content="暮城雨烟">
-<meta property="og:description" content="夜半烟雨花千树 暮城挽歌月微凉">
+<meta property="og:description" content="在谈论DNS流媒体解锁所需的SNI代理服务器之前，先来回顾和了解下通常情况下DNS请求发出之后的整个生命周期。首先，在客户端发出基于UDP协议53端口的DNS请求后，浏览器DNS缓存机制会率先寻找本地的缓存。假如未命中缓存则调用操作系统的getaddrinfo()系统函数，向操作系统寻求解析结果。倘若操作系统的DNS缓存依旧无法响应请求，则计算机向配置的上游DNS服务器发送请求，DNS服务器经历">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-09-10T11:01:20.000Z">
+<meta property="article:modified_time" content="2020-03-13T12:46:50.317Z">
 <meta property="article:author" content="夜阑听烟雨">
+<meta property="article:tag" content="DNS">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://blog.kixcs.com/categories/literature/">
+<link rel="canonical" href="https://blog.kixcs.com/archives/90d0/">
 
 
 <script id="page-configurations">
@@ -41,11 +44,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>分类: 文学 | 暮城雨烟</title>
+  <title>浅析DNS流媒体解锁在代理环境中的应用 | 暮城雨烟</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158652489-2"></script>
     <script pjax>
@@ -211,54 +214,192 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">文学
-          <small>分类</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.kixcs.com/archives/90d0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
+      <meta itemprop="name" content="夜阑听烟雨">
+      <meta itemprop="description" content="夜半烟雨花千树 暮城挽歌月微凉">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="暮城雨烟">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          浅析DNS流媒体解锁在代理环境中的应用
         </h2>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-10 19:01:20" itemprop="dateCreated datePublished" datetime="2019-09-10T19:01:20+08:00">2019-09-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-13 20:46:50" itemprop="dateModified" datetime="2020-03-13T20:46:50+08:00">2020-03-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/archives/90d0/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/90d0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h2 class="collection-header">2020</h2>
+        <p class="description"></p>
+在谈论DNS流媒体解锁所需的SNI代理服务器之前，先来回顾和了解下通常情况下DNS请求发出之后的整个生命周期。首先，在客户端发出基于UDP协议53端口的DNS请求后，浏览器DNS缓存机制会率先寻找本地的缓存。假如未命中缓存则调用操作系统的getaddrinfo()系统函数，向操作系统寻求解析结果。倘若操作系统的DNS缓存依旧无法响应请求，则计算机向配置的上游DNS服务器发送请求，DNS服务器经历了递归和迭代之后，成功的将解析结果返回给设备的操作系统，随后向该IP发起HTTPS连接即可。
+<a id="more"></a>
+
+<h4 id="简述DNS解锁"><a href="#简述DNS解锁" class="headerlink" title="简述DNS解锁"></a>简述DNS解锁</h4><p>通常情况下，关于DNS流媒体解锁适用的业务场景即为通过代理服务器可以畅通无碍的访问Netflix、HBO、Amazon Prime Video等平台，由于上述平台的某些使用限制，非IDC网段的请求才能被正常的响应，否则就会遇到类似”Proxy Error”这样的错误返回值。   </p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 通常情况下的访问请求<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+----------+       +--------------+       +-----------+</span><br><span class="line">|          |       |              |       |           |</span><br><span class="line">|  Client  +-------&gt; Proxy Server +-------&gt;  Website  |</span><br><span class="line">|          |       |              |       |           |</span><br><span class="line">+----------+       +--------------+       +-----------+</span><br></pre></td></tr></table></figure></li>
+<li><input checked="" disabled="" type="checkbox"> 倘若代理服务器不支持访问某些流媒体网站，那么就需要在此基础上增加DNS代理。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+----------+       +--------------+       +------------------+      +---------+</span><br><span class="line">|          |       |              |       |                  |      |         |</span><br><span class="line">|  Client  +-------&gt; Proxy Server +-------&gt; Smart DNS Server +------&gt; Website |</span><br><span class="line">|          |       |              |       |                  |      |         |</span><br><span class="line">+----------+       +--------------+       +------------------+      +---------+</span><br></pre></td></tr></table></figure></li>
+<li><input checked="" disabled="" type="checkbox"> 在支持访问流媒体的服务器上安装SNI代理，将远端服务器的部分流媒体流量全部转发到SNI代理服务器上，这样代理服务器也就具备了访问受限制的流媒体的能力。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">                                            +-----------+</span><br><span class="line">                                            |           |</span><br><span class="line">                                        +---&gt;  Website  |</span><br><span class="line">+----------+      +----------------+    |   |           |</span><br><span class="line">|          |      |                |    |   +-----------+</span><br><span class="line">|  Client  +------&gt;  Proxy Server  +----+</span><br><span class="line">|          |      |                |    |   +-----------+      +--------------+</span><br><span class="line">+----------+      +----------------+    |   |           |      |              |</span><br><span class="line">                                        +---&gt; SNI Proxy +------&gt; Netflix/HBO  |</span><br><span class="line">                                            |           |      |              |</span><br><span class="line">                                            +-----------+      +--------------+</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="使用netflix-proxy实现DNS解锁"><a href="#使用netflix-proxy实现DNS解锁" class="headerlink" title="使用netflix-proxy实现DNS解锁"></a>使用netflix-proxy实现DNS解锁</h4><p>该项目<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FiNzcvbmV0ZmxpeC1wcm94eQ==" title="https://github.com/ab77/netflix-proxy">GitHub<i class="fa fa-external-link"></i></span> 服务器操作系统要求为Ubuntu或者Debian，运行下列命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">apt-get -y install vim dnsutils curl sudo</span><br><span class="line">curl -fsSL https://get.docker.com/ | sh || apt-get -y install docker.io</span><br><span class="line">mkdir -p ~/netflix-proxy</span><br><span class="line">cd ~/netflix-proxy</span><br><span class="line">curl -fsSL https://github.com/ab77/netflix-proxy/archive/latest.tar.gz | gunzip - | tar x --strip-components=1</span><br><span class="line">./build.sh</span><br></pre></td></tr></table></figure>
+<p>运行完成后会给出相应用户名及密码，可以配置反向代理方便未来的维护和使用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netflix-proxy-admin site=http://IP:8080/credentials=admin:password</span><br></pre></td></tr></table></figure>
+<p>配置代理服务器的DNS服务器地址为流媒体解锁服务器IP地址</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">修改/etc/NetworkManager/NetworkManager.conf文件，在main部分添加<span class="string">"dns=none"</span>选项：</span></span><br><span class="line">vi /etc/NetworkManager/NetworkManager.conf</span><br><span class="line">[main]</span><br><span class="line">plugins=ifcfg-rh</span><br><span class="line">dns=none</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">修改/etc/resolv.conf文件</span></span><br><span class="line">vi /etc/resolv.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">Generated by NetworkManager</span></span><br><span class="line">search openstacklocal</span><br><span class="line">nameserver 8.8.8.8</span><br><span class="line">nameserver *.*.*.*</span><br></pre></td></tr></table></figure>
+<p>(可选)在服务器的其他地方保存resolv.conf文件的一个副本（假设放在/root）并设置一个crontab定时命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cp /root/resolv.conf /etc/resolv.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">添加写保护：</span></span><br><span class="line">chattr +i /etc/resolv.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">修改生成resolv.conf的相关配置文件，譬如centos7中：</span></span><br><span class="line">vi /etc/NetworkManager/NetworkManager.conf</span><br></pre></td></tr></table></figure>
+<p>重启网络</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+<p>⚠新版遇到python3出问题后可更换至旧版，️新版主要是buil.sh中的一行命令：apt install python3.6，导致python环境部署失败，详情可见netflix-proxy.log。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apt-get update\</span><br><span class="line">&amp;&amp; apt-get -y install vim dnsutils curl sudo\</span><br><span class="line">&amp;&amp; curl -fsSL https://get.docker.com/ | sh || apt-get -y install docker.io\</span><br><span class="line">&amp;&amp; mkdir -p ~/netflix-proxy\</span><br><span class="line">&amp;&amp; cd ~/netflix-proxy\</span><br><span class="line">&amp;&amp; curl -fsSL https://github.com/Newlearner365/netflix-proxy/archive/latest.tar.gz | gunzip - | tar x --strip-components=1\</span><br><span class="line">&amp;&amp; ./build.sh</span><br></pre></td></tr></table></figure>
+<p>对于部署的docker容器的运行情况，可以使用docker ps -a命令来查看。</p>
+<h4 id="使用Dnsmasq实现DNS解锁"><a href="#使用Dnsmasq实现DNS解锁" class="headerlink" title="使用Dnsmasq实现DNS解锁"></a>使用Dnsmasq实现DNS解锁</h4><p>该服务的原理是，使用Dnsmasq的DNS将网站解析劫持到SNI proxy反向代理的页面上。默认解锁Netflix/Hulu/HBO等流媒体，如需增删流媒体域名请编辑文件/etc/dnsmasq.d/custom_netflix.conf和/etc/sniproxy.conf，现以支持CentOS6/7， Debian8/9/10, Ubuntu16/18系统。</p>
+<h5 id="安装方法"><a href="#安装方法" class="headerlink" title="安装方法"></a>安装方法</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate -O dnsmasq_sniproxy.sh https://raw.githubusercontent.com/myxuchangbin/dnsmasq_sniproxy_install/master/dnsmasq_sniproxy.sh &amp;&amp; bash dnsmasq_sniproxy.sh -i</span><br></pre></td></tr></table></figure>
+<h5 id="卸载方法："><a href="#卸载方法：" class="headerlink" title="卸载方法："></a>卸载方法：</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate -O dnsmasq_sniproxy.sh https://raw.githubusercontent.com/myxuchangbin/dnsmasq_sniproxy_install/master/dnsmasq_sniproxy.sh &amp;&amp; bash dnsmasq_sniproxy.sh -u</span><br></pre></td></tr></table></figure>
+<h5 id="DNS地址修改"><a href="#DNS地址修改" class="headerlink" title="DNS地址修改"></a>DNS地址修改</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/resolv.conf</span><br></pre></td></tr></table></figure>
+<h5 id="调试排错"><a href="#调试排错" class="headerlink" title="调试排错"></a>调试排错</h5><ul>
+<li><input checked="" disabled="" type="checkbox"> 确认sniproxy有效运行<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">重启sni命令:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">如果sni不在运行，可检查配置/etc/sniproxy.conf，避免nginx或者其他程序监听80,443，可将其配置文件的80更改为801等。 </span></span><br><span class="line"><span class="meta">#</span><span class="bash">443端口必须给sni监听放行，查看：netstat -tlunp|grep 443</span></span><br><span class="line">systemctl restart sniproxy</span><br></pre></td></tr></table></figure></li>
+<li><input checked="" disabled="" type="checkbox"> 确认防火墙放行443,53端口<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">调试可直接关闭防火墙 </span></span><br><span class="line">systemctl stop firewalld.service</span><br></pre></td></tr></table></figure></li>
+<li><input checked="" disabled="" type="checkbox"> 解析域名<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">配置完毕DNS后，解析域名，判断IP是否是NETFLIX代理机器IP。</span></span><br><span class="line">nslookup netflix.com</span><br><span class="line"><span class="meta">#</span><span class="bash">如果不存在nslookup命令，CENTOS安装：</span></span><br><span class="line">yum install -y bind-utils</span><br><span class="line"><span class="meta">#</span><span class="bash">DEBIAN安装：</span></span><br><span class="line">apt-get -y install dnsutils</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>相关工具:<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2RsdW5kcXVpc3Qvc25pcHJveHk=" title="https://github.com/dlundquist/sniproxy">HTTPS代理<i class="fa fa-external-link"></i></span> <span class="exturl" data-url="aHR0cDovL3d3dy50aGVrZWxsZXlzLm9yZy51ay9kbnNtYXNxL2RvYy5odG1s" title="http://www.thekelleys.org.uk/dnsmasq/doc.html">Dnsmasq<i class="fa fa-external-link"></i></span> <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3RvcGljcy9jYWRkeXNlcnZlcg==" title="https://github.com/topics/caddyserver">Caddy<i class="fa fa-external-link"></i></span></p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
+        
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-02-27T19:44:56+08:00"
-              content="2020-02-27">
-          02-27
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>夜阑听烟雨
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.kixcs.com/archives/90d0/" title="浅析DNS流媒体解锁在代理环境中的应用">https://blog.kixcs.com/archives/90d0/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <h3 class="post-title">
-          <a class="post-title-link" href="/archives/25c7/" itemprop="url">
-            <span itemprop="name">西方哲学史 希腊哲学 [美]弗兰克·梯利</span>
-          </a>
-      </h3>
 
-    </header>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DNS/" rel="tag"> DNS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/83a8/" rel="prev" title="Kotlin容器,泛型及高阶函数应用">
+      <i class="fa fa-chevron-left"></i> Kotlin容器,泛型及高阶函数应用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/36f2/" rel="next" title="汉诺塔的递归算法">
+      汉诺塔的递归算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -305,6 +446,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#简述DNS解锁"><span class="nav-text">简述DNS解锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用netflix-proxy实现DNS解锁"><span class="nav-text">使用netflix-proxy实现DNS解锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用Dnsmasq实现DNS解锁"><span class="nav-text">使用Dnsmasq实现DNS解锁</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#安装方法"><span class="nav-text">安装方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#卸载方法："><span class="nav-text">卸载方法：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DNS地址修改"><span class="nav-text">DNS地址修改</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#调试排错"><span class="nav-text">调试排错</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -865,7 +1007,7 @@ window.addEventListener('pjax:success', () => {
       quicklink({
         timeout: 3000,
         priority: true,
-        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/categories/literature/',]
+        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/archives/90d0/',]
       });
       });
   </script>
@@ -879,6 +1021,26 @@ window.addEventListener('pjax:success', () => {
   }
   // defer loading until the whole page loading is completed
   window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://blog.kixcs.com/archives/90d0/";
+    this.page.identifier = "archives/90d0/";
+    this.page.title = "浅析DNS流媒体解锁在代理环境中的应用";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://kixcs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
 
 
