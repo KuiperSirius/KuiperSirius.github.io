@@ -23,17 +23,20 @@
     var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="夜半烟雨花千树 暮城挽歌月微凉">
-<meta property="og:type" content="website">
-<meta property="og:title" content="暮城雨烟">
-<meta property="og:url" content="https://blog.kixcs.com/tags/Windows/">
+  <meta name="description" content="为了方便提高Hitokoto一言API接口的高并发业务场景，可以把它的文本内容集成到数据库中，并将其部署到你的VPS抑或是阿里云RDS上。倘若该一言API服务部署在服务器上，开放服务器防火墙3306端口和授予MySQL外部连接权限即可。Win10本地环境中，本次利用到Navicat Premium 15（可同时连接MySQL、MariaDB、MongoDB、SQL Server、Oracle、P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建一个基于PHP和MySQL的一言Hitokoto接口">
+<meta property="og:url" content="https://blog.kixcs.com/archives/746d/">
 <meta property="og:site_name" content="暮城雨烟">
-<meta property="og:description" content="夜半烟雨花千树 暮城挽歌月微凉">
+<meta property="og:description" content="为了方便提高Hitokoto一言API接口的高并发业务场景，可以把它的文本内容集成到数据库中，并将其部署到你的VPS抑或是阿里云RDS上。倘若该一言API服务部署在服务器上，开放服务器防火墙3306端口和授予MySQL外部连接权限即可。Win10本地环境中，本次利用到Navicat Premium 15（可同时连接MySQL、MariaDB、MongoDB、SQL Server、Oracle、P">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-13T08:58:12.000Z">
+<meta property="article:modified_time" content="2020-07-13T09:19:57.791Z">
 <meta property="article:author" content="夜阑听烟雨">
+<meta property="article:tag" content="Hitokoto">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://blog.kixcs.com/tags/Windows/">
+<link rel="canonical" href="https://blog.kixcs.com/archives/746d/">
 
 
 <script id="page-configurations">
@@ -41,11 +44,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>标签: Windows | 暮城雨烟</title>
+  <title>搭建一个基于PHP和MySQL的一言Hitokoto接口 | 暮城雨烟</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158652489-2"></script>
     <script pjax>
@@ -211,54 +214,157 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Windows
-          <small>标签</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.kixcs.com/archives/746d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
+      <meta itemprop="name" content="夜阑听烟雨">
+      <meta itemprop="description" content="夜半烟雨花千树 暮城挽歌月微凉">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="暮城雨烟">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          搭建一个基于PHP和MySQL的一言Hitokoto接口
         </h2>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-07-13 16:58:12 / 修改时间：17:19:57" itemprop="dateCreated datePublished" datetime="2020-07-13T16:58:12+08:00">2020-07-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/design/" itemprop="url" rel="index"><span itemprop="name">设计</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/archives/746d/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/746d/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h2 class="collection-header">2017</h2>
+        <p class="description">
+为了方便提高Hitokoto一言API接口的高并发业务场景，可以把它的文本内容集成到数据库中，并将其部署到你的VPS抑或是阿里云RDS上。倘若该一言API服务部署在服务器上，开放服务器防火墙3306端口和授予MySQL外部连接权限即可。Win10本地环境中，本次利用到Navicat Premium 15（可同时连接MySQL、MariaDB、MongoDB、SQL Server、Oracle、PostgreSQL和SQLite数据库），链接到远端数据库并验证连通性，首先建立一个名为hitokoto的数据库，数据表名同上。
+</p>
+<a id="more"></a>
+
+<h3 id="简言"><a href="#简言" class="headerlink" title="简言"></a>简言</h3><p>数据库名称和数据表的名字都叫hitokoto。表中有三个字段，分别为id（int类型，长度11，非空/NULL，主键）, is_display（int类型，长度11）, hitokoto（varchar类型，长度255），其中id为自增主键，is_display默认值为0。<br>创建接口，需要实现以下逻辑：随机返回一句话，并且返回的这句话与上次请求的结果不相同。设置一个is_display字段，用来保存调用状态，如果其value=1，说明上次刚刚被调用，反之亦然。在这一次调用时，随机返回除了上一次调用过的结果之外的句子，然后将上一次调用结果中的is_display的值改为0，将这次请求结果的is_display的值改为1。后端代码应用到前端，使用Ajax来发送与处理请求。</p>
+<h3 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h3><p>hitokoto.php代码如下所示：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$sql_server = <span class="string">"MySQL服务器域名或者IPv4地址"</span>;</span><br><span class="line">$sql_user = <span class="string">"root"</span>;</span><br><span class="line">$sql_pass = <span class="string">"**"</span>;</span><br><span class="line">$sql_dbname = <span class="string">"hitokoto"</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">dataBase</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connectSql</span><span class="params">($sql_server,$sql_user,$sql_pass,$sql_dbname)</span> </span>&#123;</span><br><span class="line">        $conn = <span class="keyword">new</span> mysqli(<span class="string">"$sql_server"</span>,<span class="string">"$sql_user"</span>,<span class="string">"$sql_pass"</span>,<span class="string">"$sql_dbname"</span>);</span><br><span class="line">        mysqli_set_charset($conn,<span class="string">"utf8"</span>);</span><br><span class="line">        date_default_timezone_set(<span class="string">"PRC"</span>);</span><br><span class="line">        <span class="keyword">return</span> $conn;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sqlQuery</span><span class="params">($sql,$conn)</span> </span>&#123;</span><br><span class="line">        $sql_query = $conn-&gt;query($sql);</span><br><span class="line">        <span class="keyword">return</span> $sql_query;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getHitokotos</span><span class="params">($sql,$conn)</span> </span>&#123;</span><br><span class="line">        $data = $conn-&gt;query($sql);</span><br><span class="line">        $data_arrays = [];</span><br><span class="line">        <span class="keyword">while</span> ( $data_array = $data-&gt;fetch_array( MYSQLI_ASSOC ) ) &#123;</span><br><span class="line">            $data_arrays[] = $data_array;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> $data_arrays;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getTotal</span><span class="params">($sql,$conn)</span> </span>&#123;</span><br><span class="line">        $data1 = $conn-&gt;query($sql);</span><br><span class="line">        $total = $data1-&gt;fetch_array();</span><br><span class="line">        $totals = $total[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">return</span> $totals;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$dataBase = <span class="keyword">new</span> dataBase();</span><br><span class="line">$conn = $dataBase-&gt;connectSql($sql_server,$sql_user,$sql_pass,$sql_dbname);</span><br><span class="line"></span><br><span class="line">$sql_hitokoto = <span class="string">"SELECT * FROM hitokoto WHERE is_display != 1"</span>;</span><br><span class="line">$sql_total  = <span class="string">"SELECT COUNT(*) FROM hitokoto WHERE is_display != 1"</span>;</span><br><span class="line"></span><br><span class="line">$hitokotos = $dataBase-&gt;getHitokotos($sql_hitokoto,$conn);</span><br><span class="line">$total = $dataBase-&gt;getTotal($sql_total,$conn);</span><br><span class="line"></span><br><span class="line">$rand = rand(<span class="number">0</span>,$total<span class="number">-1</span>);</span><br><span class="line">$id = $hitokotos[$rand][<span class="string">'id'</span>];</span><br><span class="line"></span><br><span class="line">$sql_dislpay1 = <span class="string">"UPDATE hitokoto SET is_display = 0 WHERE is_display = 1"</span>;</span><br><span class="line">$sql_dislpay2 = <span class="string">"UPDATE hitokoto SET is_display = 1 WHERE id = '$id'"</span>;</span><br><span class="line"></span><br><span class="line">$display_query1 = $dataBase-&gt;sqlQuery($sql_dislpay1,$conn);</span><br><span class="line">$display_query2 = $dataBase-&gt;sqlQuery($sql_dislpay2,$conn);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span>($hitokotos[$rand][<span class="string">'hitokoto'</span>]);</span><br><span class="line">mysqli_close($conn);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h3><p>首先要在合适的位置添加div标签<code>&lt;div id="hitokoto"></code>，或者直接在某需要输出的HTML标签内部(如<code>&lt;p></code>等等)id=”hitokoto”也可以。<br>JavaScript代码如下所示，用来发起Ajax请求：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">showHitokoto</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> xmlhttp;</span><br><span class="line">      xmlhttp = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">      xmlhttp.open(<span class="string">"GET"</span>, <span class="string">"https://kixcs.com/hitokoto.php"</span>, <span class="literal">true</span>);</span><br><span class="line">      xmlhttp.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">         <span class="keyword">if</span> (xmlhttp.readyState == <span class="number">4</span>) &#123;</span><br><span class="line">            <span class="built_in">document</span>.getElementById(<span class="string">'hitokoto'</span>).innerHTML = xmlhttp.responseText;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      xmlhttp.send();</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">window</span>.onload = showHitokoto()<span class="comment">//加载时自动执行</span></span><br></pre></td></tr></table></figure>
+<p>倘若博客主题使用了Pjax无刷新，例如Hexo框架的静态博客中可以全局的指定Pjax属性，还需要指定Pjax重载函数，有很多跟上面的相同。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">   <span class="keyword">var</span> xmlhttp;</span><br><span class="line">   xmlhttp = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">   xmlhttp.open(<span class="string">"GET"</span>, <span class="string">"./hitokoto.php"</span>, <span class="literal">true</span>);</span><br><span class="line">   xmlhttp.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (xmlhttp.readyState == <span class="number">4</span>) &#123;</span><br><span class="line">         <span class="built_in">document</span>.getElementById(<span class="string">'hitokoto'</span>).innerHTML = xmlhttp.responseText;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   xmlhttp.send();</span><br></pre></td></tr></table></figure>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
+        
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2017-01-25T19:51:14+08:00"
-              content="2017-01-25">
-          01-25
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>夜阑听烟雨
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.kixcs.com/archives/746d/" title="搭建一个基于PHP和MySQL的一言Hitokoto接口">https://blog.kixcs.com/archives/746d/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <h3 class="post-title">
-          <a class="post-title-link" href="/archives/38d9/" itemprop="url">
-            <span itemprop="name">关于计算机系统安全的若干问题及解决方案</span>
-          </a>
-      </h3>
 
-    </header>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hitokoto/" rel="tag"> Hitokoto</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/2cf7/" rel="prev" title="浅析常用的视频封装格式与媒体编码格式">
+      <i class="fa fa-chevron-left"></i> 浅析常用的视频封装格式与媒体编码格式
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -305,6 +411,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简言"><span class="nav-text">简言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后端"><span class="nav-text">后端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前端"><span class="nav-text">前端</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -865,7 +972,7 @@ window.addEventListener('pjax:success', () => {
       quicklink({
         timeout: 3000,
         priority: true,
-        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/tags/Windows/',]
+        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/archives/746d/',]
       });
       });
   </script>
@@ -879,6 +986,26 @@ window.addEventListener('pjax:success', () => {
   }
   // defer loading until the whole page loading is completed
   window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://blog.kixcs.com/archives/746d/";
+    this.page.identifier = "archives/746d/";
+    this.page.title = "搭建一个基于PHP和MySQL的一言Hitokoto接口";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://kixcs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
 
 
