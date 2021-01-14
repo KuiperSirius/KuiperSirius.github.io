@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="通常情况下对于公网环境下访问局域网设备的需求而言，其解决方案有使用动态域名解析DDNS以及各种内网穿透工具(如Frp，Ngrok等等)。对于DDNS方式和Frp而言，两种方式各有千秋。首先对于动态域名解析，其基本要求是本地网关设备能够获取到运营商提供的公网IPv4地址，这对大多数中国移动宽带和部分地区中国电信宽带用户而言或许会有一些困扰；对于Frp内网穿透方式则无需苛刻的条件，只需要一台具有公网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树莓派配合frp内网穿透及ADS-B信号捕获的应用">
+<meta property="og:url" content="https://blog.kixcs.com/archives/adb7/">
+<meta property="og:site_name" content="暮城雨烟">
+<meta property="og:description" content="通常情况下对于公网环境下访问局域网设备的需求而言，其解决方案有使用动态域名解析DDNS以及各种内网穿透工具(如Frp，Ngrok等等)。对于DDNS方式和Frp而言，两种方式各有千秋。首先对于动态域名解析，其基本要求是本地网关设备能够获取到运营商提供的公网IPv4地址，这对大多数中国移动宽带和部分地区中国电信宽带用户而言或许会有一些困扰；对于Frp内网穿透方式则无需苛刻的条件，只需要一台具有公网">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-10T14:04:18.000Z">
+<meta property="article:modified_time" content="2021-01-14T16:19:16.875Z">
+<meta property="article:author" content="夜阑听烟雨">
+<meta property="article:tag" content="Frp">
+<meta property="article:tag" content="ADS-B">
+<meta property="article:tag" content="Raspberry Pi">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.kixcs.com/archives/adb7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>树莓派配合frp内网穿透及ADS-B信号捕获的应用 | 暮城雨烟</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158652489-2"></script>
+    <script pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-158652489-2');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+
+
+
+<link rel="alternate" href="/atom.xml" title="暮城雨烟" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">暮城雨烟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">The Sound of Silence</h1>
+      
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-network">
+
+    <a href="/categories/network" rel="section"><i class="fa fa-fw fa-desktop"></i>网络</a>
+
+  </li>
+        <li class="menu-item menu-item-technique">
+
+    <a href="/categories/technique" rel="section"><i class="fa fa-fw fa-cubes"></i>技术</a>
+
+  </li>
+        <li class="menu-item menu-item-design">
+
+    <a href="/categories/design" rel="section"><i class="fa fa-fw fa-magic"></i>设计</a>
+
+  </li>
+        <li class="menu-item menu-item-thinking">
+
+    <a href="/categories/thinking" rel="section"><i class="fa fa-fw fa-coffee"></i>随想</a>
+
+  </li>
+        <li class="menu-item menu-item-literature">
+
+    <a href="/categories/literature" rel="section"><i class="fa fa-fw fa-book"></i>文学</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/disqusjs@1.2.2/dist/disqus.js"></script>
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL0t1aXBlclNpcml1cw==" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.kixcs.com/archives/adb7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
+      <meta itemprop="name" content="夜阑听烟雨">
+      <meta itemprop="description" content="夜半烟雨花千树 暮城挽歌月微凉">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="暮城雨烟">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          树莓派配合frp内网穿透及ADS-B信号捕获的应用
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-10 22:04:18" itemprop="dateCreated datePublished" datetime="2021-01-10T22:04:18+08:00">2021-01-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-01-15 00:19:16" itemprop="dateModified" datetime="2021-01-15T00:19:16+08:00">2021-01-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technique/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/archives/adb7/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/adb7/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p class="description"></p>
+通常情况下对于公网环境下访问局域网设备的需求而言，其解决方案有使用动态域名解析DDNS以及各种内网穿透工具(如Frp，Ngrok等等)。对于DDNS方式和Frp而言，两种方式各有千秋。首先对于动态域名解析，其基本要求是本地网关设备能够获取到运营商提供的公网IPv4地址，这对大多数中国移动宽带和部分地区中国电信宽带用户而言或许会有一些困扰；对于Frp内网穿透方式则无需苛刻的条件，只需要一台具有公网IPv4地址的服务器即可，进而间接的通过该服务器建立公网到局域网的逻辑链路访问。
+<a id="more"></a>
+
+<h3 id="frp相关配置"><a href="#frp相关配置" class="headerlink" title="frp相关配置"></a>frp相关配置</h3><p>首先先给出<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2ZhdGVkaWVyL2ZycC9ibG9iL21hc3Rlci9SRUFETUVfemgubWQ=" title="https://github.com/fatedier/frp/blob/master/README_zh.md">frp中文文档<i class="fa fa-external-link"></i></span>的Github地址，简而言之，frp是一个可用于内网穿透的高性能的反向代理应用，支持tcp,udp协议，并且为http和https应用协议提供了额外的能力，其中对于http协议的内网穿透还支持配置用户名和密码以保证安全。<br>服务器端安装<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2ZhdGVkaWVyL2ZycC9yZWxlYXNlcw==" title="https://github.com/fatedier/frp/releases">frp<i class="fa fa-external-link"></i></span>，服务器端为x86 64位主机，需要选择例如“frp_0.34.3_linux_amd64.tar.gz”字样的安装包，复制链接地址，wget直接下载到当前目录，并使用tar -zxvf frp_0.34.3_linux_amd64.tar.gz解压该软件包即可。倘若此时就希望运行frp测试是否可以启动成功，可以运行./frps -c frps.ini以测试。<br>其次对于服务器上运行的frp，通常情况下是需要后台持续运行该进程的，可以用screen窗口来维持frp后台，这里我更推荐将frp写入系统的service服务中去，既可以后台运行，又可以开机自启，感谢这位Youtuber<span class="exturl" data-url="aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1LZWVjVWhoZklFOA==" title="https://www.youtube.com/watch?v=KeecUhhfIE8">司波图<i class="fa fa-external-link"></i></span>给予的灵感。</p>
+<p>下面给出frp.service的配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">服务器运行服务创建</span></span><br><span class="line">vi /lib/systemd/system/frps.service</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">Frps服务命令</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=fraps service</span><br><span class="line">After=network.target syslog.target</span><br><span class="line">Wants=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">ExecStart=/root/frp/frps -c /root/frp/frps.ini  </span><br><span class="line"><span class="meta">#</span><span class="bash">此处安实际情况修改，该路径为frp安装目录。</span></span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<p>之后需要注册服务以及配置开机自启，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">frp注册服务</span></span><br><span class="line">systemctl start frps</span><br><span class="line">systemctl enable frps</span><br><span class="line"><span class="meta">#</span><span class="bash">倘若有需要查看该frp服务状态</span></span><br><span class="line">service frps status</span><br><span class="line"><span class="meta">#</span><span class="bash">查看后台正在运行的进程</span></span><br><span class="line">ps -auxw</span><br></pre></td></tr></table></figure>
+<p>下面给出frps服务端配置文件frps.ini中的内容以供参考：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port = 7000</span><br><span class="line">token = ***</span><br><span class="line">vhost_http_port = 7080</span><br><span class="line">vhost_https_port = 7443</span><br><span class="line">dashboard_port = 7001</span><br><span class="line">dashboard_user = root</span><br><span class="line">dashboard_pwd = ***</span><br><span class="line">tcp_mux = true</span><br><span class="line">max_pool_count = 10</span><br></pre></td></tr></table></figure>
+<p>配置完成服务器端的frps后，便是配置客户端中的详细参数了。由于本人的frp客户端是OpenWRT软路由GUI图形界面，参考意义不大，重要的是设置好需要映射的本地端口和密码即可，故配置略。</p>
+<h3 id="树莓派相关配置"><a href="#树莓派相关配置" class="headerlink" title="树莓派相关配置"></a>树莓派相关配置</h3><p>树莓派家族的硬件设备有官方提供的镜像，也可以刷入Debian/Ubuntu系列的第三方镜像，其实官方提供的树莓派Raspberry Pi Buster系统号称可以兼容所有树莓派板子型号，其系统也是基于Debian开发而来。<br>首先下载<span class="exturl" data-url="aHR0cHM6Ly9kb3dubG9hZHMucmFzcGJlcnJ5cGkub3JnL3Jhc3Bpb3NfZnVsbF9hcm1oZi9pbWFnZXMvcmFzcGlvc19mdWxsX2FybWhmLTIwMjAtMTItMDQvMjAyMC0xMi0wMi1yYXNwaW9zLWJ1c3Rlci1hcm1oZi1mdWxsLnppcA==" title="https://downloads.raspberrypi.org/raspios_full_armhf/images/raspios_full_armhf-2020-12-04/2020-12-02-raspios-buster-armhf-full.zip">Raspberry Pi Buster<i class="fa fa-external-link"></i></span>，之后将此.img文件/镜像刷入SD卡中，我使用的刷入软件名为：balenaEtcher，看官们也可以选择你所熟悉和顺手的软件。<br>之后在boot分区下新建一个空文件，名为ssh，就可以开启SSH命令行登录，再在boot分区下新建wpa_supplicant.conf文件，并写入无线的相关配置。为了不泄漏信息，下面只是示例，可以同时配置多个无线网络。当然，我们也可以直接使用RJ-45网线接入路由器，进入路由器后台查看该树莓派设备的IP地址，进行IP地址和MAC地址的绑定。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">country=CN</span><br><span class="line">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev</span><br><span class="line">update_config=1</span><br><span class="line"> </span><br><span class="line">network=&#123;</span><br><span class="line">    ssid="wifi名"</span><br><span class="line">    psk="wifi密码"</span><br><span class="line">    key_mgmt=WPA-PSK #加密方式</span><br><span class="line">    priority=1 #优先级</span><br><span class="line">&#125;</span><br><span class="line">network=&#123;</span><br><span class="line">    ssid="another wi-fi name here"</span><br><span class="line">    psk="another wi-fi password here"</span><br><span class="line">    key_mgmt=WPA-PSK</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>倘若你有LCD 3.5英寸的显示屏（40个针脚，该LCD需要占用26个针脚）的话，可以使用以下命令安装LCD驱动并开启显示屏（树莓派默认是由HDMI输出视频信号），倘若出现屏幕图像反转等问题，可以查看<span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8xNTczNDAyMDU=" title="https://zhuanlan.zhihu.com/p/157340205">详细配置<i class="fa fa-external-link"></i></span>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">在线安装方式</span></span><br><span class="line">git clone https://github.com/waveshare/LCD-show.git</span><br><span class="line">cd LCD–show/</span><br><span class="line">sudo ./LCD35–show</span><br><span class="line"><span class="meta">#</span><span class="bash">离线安装方式</span></span><br><span class="line">wget http://www.lcdwiki.com/res/RaspDriver/LCD-show.tar.gz</span><br><span class="line"><span class="meta">#</span><span class="bash">将文件拷贝到boot目录下，进行解压缩</span></span><br><span class="line">cd /boot </span><br><span class="line">sudo tar zxvf LCD-show.tar.gz </span><br><span class="line">cd LCD-show/ </span><br></pre></td></tr></table></figure>
+
+<h3 id="ADS-B相关配置"><a href="#ADS-B相关配置" class="headerlink" title="ADS-B相关配置"></a>ADS-B相关配置</h3><p>本次配置需要用到的软件为Mode-S Beast开源驱动，要从源码编译打包的软件有beast-splitter和dump1090-fa，此外还需要编译安装作为dump1090依赖项而存在的bladeRF。<br>首先准备编译的环境：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">默认使用pi用户登录，而非root用户</span></span><br><span class="line">pi@raspberrypi:~$ sudo apt update &amp;&amp; apt-get upgrade</span><br><span class="line">pi@raspberrypi:~$ sudo apt install -y git cmake build-essential debhelper librtlsdr-dev pkg-config dh-systemd libncurses5-dev libboost-system-dev libboost-program-options-dev libboost-regex-dev libusb-1.0-0-dev doxygen libtecla-dev libtecla1 help2man pandoc</span><br></pre></td></tr></table></figure>
+<p>而后将所需的源码拉取到本地，考虑到Github在国内的访问体验，故本次操作所需的代码拉取是导入Gitee后再进行的拉取操作。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~$ git clone https://gitee.com/turbulance/bladeRF ~/src/bladeRF</span><br><span class="line">pi@raspberrypi:~$ git clone https://gitee.com/turbulance/beast-splitter ~/src/beast-splitter</span><br><span class="line">pi@raspberrypi:~$ git clone https://gitee.com/turbulance/dump1090 ~/src/dump1090</span><br></pre></td></tr></table></figure>
+<p>进入 beast-splitter 的源码目录，然后通过 dpkg 生成 deb 包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~$ cd ~/src/beast-splitter</span><br><span class="line">pi@raspberrypi:~/src/beast-splitter$ dpkg-buildpackage -b --no-sign</span><br></pre></td></tr></table></figure>
+<p>生成的 deb 位于上级目录，安装 beast-splitter_3.8.0_armhf.deb 即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~/src/beast-splitter$ sudo dpkg --install ../beast-splitter_3.8.0_armhf.deb</span><br></pre></td></tr></table></figure>
+<p>而后将Mode-S Beast与天线和树莓派连接，启动 beast-spliter。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~/src/beast-splitter$ sudo systemctl start beast-splitter</span><br></pre></td></tr></table></figure>
+<p>倘若一切情况正常，应该可以看到绿色指示灯不断闪烁，可以看到/dev目录多出了一个名为beast的设备。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~/src/beast-splitter$ ls /dev</span><br><span class="line">autofs           input               null    serial  tty23  tty44  tty8       vcsa3</span><br><span class="line">beast            kmsg                ppp     shm     tty24  tty45  tty9       vcsa4</span><br><span class="line">block            log                 ptmx    snd     tty25  tty46  ttyAMA0    vcsa5</span><br><span class="line">btrfs-control    loop0               pts     stderr  tty26  tty47  ttyprintk  vcsa6</span><br><span class="line">bus              loop1               ram0    stdin   tty27  tty48  ttyUSB0    vcsm</span><br><span class="line">cachefiles       loop2               ram1    stdout  tty28  tty49  ttyUSB1    vcsm-cma</span><br><span class="line">char             loop3               ram10   tty     tty29  tty5   uhid       vcsu</span><br><span class="line">console          loop4               ram11   tty0    tty3   tty50  uinput     vcsu1</span><br><span class="line">cpu_dma_latency  loop5               ram12   tty1    tty30  tty51  urandom    vcsu2</span><br><span class="line">cuse             loop6               ram13   tty10   tty31  tty52  v4l        vcsu3</span><br><span class="line">disk             loop7               ram14   tty11   tty32  tty53  vchiq      vcsu4</span><br><span class="line">fb0              loop-control        ram15   tty12   tty33  tty54  vcio       vcsu5</span><br><span class="line">fd               mapper              ram2    tty13   tty34  tty55  vc-mem     vcsu6</span><br><span class="line">full             media0              ram3    tty14   tty35  tty56  vcs        vhci</span><br><span class="line">fuse             mem                 ram4    tty15   tty36  tty57  vcs1       video10</span><br><span class="line">gpiochip0        memory_bandwidth    ram5    tty16   tty37  tty58  vcs2       video11</span><br><span class="line">gpiochip1        mmcblk0             ram6    tty17   tty38  tty59  vcs3       video12</span><br><span class="line">gpiochip2        mmcblk0p1           ram7    tty18   tty39  tty6   vcs4       watchdog</span><br><span class="line">gpiochip3        mmcblk0p2           ram8    tty19   tty4   tty60  vcs5       watchdog0</span><br><span class="line">gpiochip4        mqueue              ram9    tty2    tty40  tty61  vcs6       zero</span><br><span class="line">gpiomem          net                 random  tty20   tty41  tty62  vcsa</span><br><span class="line">hwrng            network_latency     raw     tty21   tty42  tty63  vcsa1</span><br><span class="line">initctl          network_throughput  rfkill  tty22   tty43  tty7   vcsa2</span><br></pre></td></tr></table></figure>
+<p>安装好了Beast的驱动，已经成功了一半，接下来是编译打包bladeRF和dump1090-fa。前面已经提到，dump1090-fa依赖于bladeRF，所以先要安装bladeRF才能编译dump1090-fa。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~/src/beast-splitter$ cd ~/src/bladeRF</span><br><span class="line">pi@raspberrypi:~/src/beast-splitter$ git checkout 2017.12-rc1</span><br><span class="line">pi@raspberrypi:~/src/bladeRF$ dpkg-buildpackage -b --no-sign</span><br><span class="line">pi@raspberrypi:~/src/bladeRF$ sudo dpkg --install ../libbladerf1_2017.07_armhf.deb</span><br><span class="line">pi@raspberrypi:~/src/bladeRF$ sudo dpkg --install ../libbladerf-dev_2017.07_armhf.deb</span><br><span class="line">pi@raspberrypi:~/src/bladeRF$ sudo dpkg --install ../libbladerf-udev_2017.07_armhf.deb</span><br></pre></td></tr></table></figure>
+<p>在安装好bladeRF过后，就可以编译dump1090-fa了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~/src/bladeRF$ cd ~/src/dump1090</span><br><span class="line">pi@raspberrypi:~/src/dump1090$ dpkg-buildpackage -b --no-sign</span><br></pre></td></tr></table></figure>
+<p>由于dump1090-fa 依赖于lighttpd 工作，所以安装打包好的dump1090-fa之前还要先安装lighttpd，否则会报错。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~/src/dump1090$ sudo apt install -y lighttpd</span><br></pre></td></tr></table></figure>
+<p>接下来才是安装 dump1090-fa。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~/src/dump1090$ sudo dpkg --install ~/src/dump1090-fa_3.8.0_armhf.deb</span><br></pre></td></tr></table></figure>
+<p>最后重启设备即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pi@raspberrypi:~/src/dump1090$ sudo reboot</span><br></pre></td></tr></table></figure>
+<p>待到机器重启完毕后，打开http://[树莓派 IP]:80/dump1090-fa/或者IP:8080即可看到实时的 ADS-B 资讯。<br>假如你有修改GPS坐标的需求，则需要修改 /etc/default/dump1090-fa，该文件是dump1090的配置文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@pi:/home# vi /etc/default/dump1090-fa</span><br></pre></td></tr></table></figure>
+<p>首先配置dump1090开机启动，直接将配置文件中ENABLED字段赋值为yes即可。<br>考虑到经纬度设置及隐私问题安全，可以填一个大致的位置，所以在 DECODER_OPTIONS 字段加入 –lat 41.00 –lon 112.00这样一句话。<br>综合上述要求，这里给出一个配置文件示范，详细可参考<span class="exturl" data-url="aHR0cHM6Ly9pYmNsLnVzL0FEU0JfRGVjb2RlXzIwMjAwMTE4Lw==" title="https://ibcl.us/ADSB_Decode_20200118/">RTL-SDR<i class="fa fa-external-link"></i></span>的配置。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> dump1090-fa configuration</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This is sourced by /usr/share/dump1090-fa/start-dump1090-fa as a</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> shellscript fragment.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> If you are using a PiAware sdcard image, this config file is regenerated</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> on boot based on the contents of piaware-config.txt; any changes made to this</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> file will be lost.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> dump1090-fa won<span class="string">'t automatically start unless ENABLED=yes</span></span></span><br><span class="line">ENABLED=yes</span><br><span class="line"></span><br><span class="line">RECEIVER_OPTIONS="--device-index 1 --gain 50 --ppm 0"</span><br><span class="line">DECODER_OPTIONS="--lat 33.000 --lon 118.000 --max-range 360 --fix"</span><br><span class="line">NET_OPTIONS="--net --net-heartbeat 60 --net-ro-size 1300 --net-ro-interval 0.2 --net-ri-port 0 --net-ro-port 30002 --net-sbs-port 30003 --net-bi-port 30004,30104 --net-bo-port 30005"</span><br><span class="line">JSON_OPTIONS="--json-location-accuracy 1"</span><br><span class="line"></span><br><span class="line">------</span><br><span class="line"><span class="meta">#</span><span class="bash"> dump1090-fa configuration</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This is sourced by /usr/share/dump1090-fa/start-dump1090-fa as a</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> shellscript fragment.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> If you are using a PiAware sdcard image, this config file is regenerated</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> on boot based on the contents of piaware-config.txt; any changes made to this</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> file will be lost.</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> dump1090-fa won<span class="string">'t automatically start unless ENABLED=yes</span></span></span><br><span class="line">ENABLED=yes</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">DECODER_OPTIONS=<span class="string">"--lat &lt;env1&gt; --lon &lt;env2&gt; --max-range 360"</span></span></span><br><span class="line">DECODER_OPTIONS="--lat 35.8 --lon 125.3 --max-range 360"</span><br><span class="line">NET_OPTIONS="--net --net-heartbeat 60 --net-ro-size 1000 --net-ro-interval 1 --net-http-port 0 --net-ri-port 0 --net-ro-port 30002 --net-sbs-port 30003 --net-bi-port 30004,30104"</span><br><span class="line">JSON_OPTIONS="--json-location-accuracy 2"</span><br><span class="line">RECEIVER_OPTIONS="--net-only --net-bo-port 0 --fix"</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nginx反向代理相关配置"><a href="#Nginx反向代理相关配置" class="headerlink" title="Nginx反向代理相关配置"></a>Nginx反向代理相关配置</h3><p>每一次进行frp内网穿透时，总是需要进行输入IP地址和高位端口，甚是麻烦和不方便记忆，所以我能想到的一种方法便是利用Nginx的proxy_pass参数进行反向代理本地端口进行内网穿透，并且在frp使用http的用户名和密码验证的情况下，使用https配合CDN以达到更高效更便捷的访问。<br>下面直接给出Nginx vhost配置文件示例：（该文件中所以相关设置已经经过本人实际检验）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">    &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name ***;</span><br><span class="line"><span class="meta">		#</span><span class="bash">http重定向到https</span></span><br><span class="line">         if ($scheme = http ) &#123;</span><br><span class="line">             return 301 https://$host$request_uri;</span><br><span class="line">         &#125;       </span><br><span class="line">         location /&#123;</span><br><span class="line">            proxy_pass http://127.0.0.1:7080/;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_hide_header X-Powered-By;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        access_log  /home/wwwlogs/***.log;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">server</span><br><span class="line">    &#123;</span><br><span class="line">        listen 443 ssl http2;</span><br><span class="line">        server_name ***;</span><br><span class="line">       </span><br><span class="line">        ssl_certificate /usr/local/nginx/conf/ssl/**.com/***.cer;</span><br><span class="line">        ssl_certificate_key /usr/local/nginx/conf/ssl/**.com/***.key;</span><br><span class="line">        ssl_session_timeout 5m;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line">        ssl_ciphers "TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5";</span><br><span class="line">        ssl_session_cache builtin:1000 shared:SSL:10m;</span><br><span class="line">        # openssl dhparam -out /usr/local/nginx/conf/ssl/dhparam.pem 2048</span><br><span class="line">        ssl_dhparam /usr/local/nginx/conf/ssl/dhparam.pem;</span><br><span class="line"></span><br><span class="line">      </span><br><span class="line">        location / &#123;</span><br><span class="line">                      #关于frp与Nginx配合使用的问题：https://blog.csdn.net/rfrftt/article/details/89317529</span><br><span class="line">                      #https://www.v2ex.com/t/378393</span><br><span class="line">                         proxy_pass http://127.0.0.1:7080/;</span><br><span class="line">                         proxy_ssl_server_name on;</span><br><span class="line">                         proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">                         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">                         proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">                         proxy_set_header Host $host;</span><br><span class="line">						#防止出现https页面中包含http不安全链接问题</span><br><span class="line">                         add_header Content-Security-Policy upgrade-insecure-requests;                       </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        access_log  /home/wwwlogs/***.log;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>夜阑听烟雨
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.kixcs.com/archives/adb7/" title="树莓派配合frp内网穿透及ADS-B信号捕获的应用">https://blog.kixcs.com/archives/adb7/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Frp/" rel="tag"> Frp</a>
+              <a href="/tags/ADS-B/" rel="tag"> ADS-B</a>
+              <a href="/tags/Raspberry-Pi/" rel="tag"> Raspberry Pi</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/746d/" rel="prev" title="搭建一个基于PHP和MySQL的一言Hitokoto接口">
+      <i class="fa fa-chevron-left"></i> 搭建一个基于PHP和MySQL的一言Hitokoto接口
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#frp相关配置"><span class="nav-text">frp相关配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#树莓派相关配置"><span class="nav-text">树莓派相关配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ADS-B相关配置"><span class="nav-text">ADS-B相关配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx反向代理相关配置"><span class="nav-text">Nginx反向代理相关配置</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/">
+	<img class="site-author-image" itemprop="image" alt="夜阑听烟雨"
+      src="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
+	 </a>
+  <p class="site-author-name" itemprop="name">夜阑听烟雨</p>
+  <div class="site-description" itemprop="description">夜半烟雨花千树 暮城挽歌月微凉</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0t1aXBlclNpcml1cy8=" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;KuiperSirius&#x2F;"><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnN1bW1lckBraXhjcy5jb20=" title="E-Mail → mailto:summer@kixcs.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly93d3cuaW5zdGFncmFtLmNvbS9taW5vcmR1c2t3b29kLw==" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;minorduskwood&#x2F;"><i class="fa fa-fw fa-instagram"></i>Instagram</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9EdXNrQXV0dW1u" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;DuskAutumn"><i class="fa fa-fw fa-twitter"></i>Twitter</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly90Lm1lL2xhcml4c2lyaXVz" title="Telegram → https:&#x2F;&#x2F;t.me&#x2F;larixsirius"><i class="fa fa-fw fa-telegram"></i>Telegram</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9zdGVhbWNvbW11bml0eS5jb20vaWQvVHdpbGlnaHRTdW1tZXI=" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;id&#x2F;TwilightSummer"><i class="fa fa-fw fa-steam"></i>Steam</span>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+    <div class="links-of-blogroll motion-element links-of-blogroll-block">
+      <div class="links-of-blogroll-title">
+        <!-- modify icon to fire by szw -->
+        <i class="fa fa-history fa-" aria-hidden="true"></i>
+        近期文章
+      </div>
+      <ul class="links-of-blogroll-list">
+        
+        
+          <li>
+            <a href="/archives/adb7/" title="树莓派配合frp内网穿透及ADS-B信号捕获的应用" target="_blank">树莓派配合frp内网穿透及ADS-B信号捕获的应用</a>
+          </li>
+        
+          <li>
+            <a href="/archives/746d/" title="搭建一个基于PHP和MySQL的一言Hitokoto接口" target="_blank">搭建一个基于PHP和MySQL的一言Hitokoto接口</a>
+          </li>
+        
+          <li>
+            <a href="/archives/2cf7/" title="浅析常用的视频封装格式与媒体编码格式" target="_blank">浅析常用的视频封装格式与媒体编码格式</a>
+          </li>
+        
+          <li>
+            <a href="/archives/3869/" title="Hitokoto一言API及微软Bing每日壁纸API的实现" target="_blank">Hitokoto一言API及微软Bing每日壁纸API的实现</a>
+          </li>
+        
+          <li>
+            <a href="/archives/9e1/" title="一些前端JS CDN开源库的国内镜像及Hexo相关配置" target="_blank">一些前端JS CDN开源库的国内镜像及Hexo相关配置</a>
+          </li>
+        
+      </ul>
+    </div>
+
+
+
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+      </div>
+     
+     
+	 
+	 
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-cubes"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Twilight Summer</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">70k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:04</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly9waXNjZXMudGhlbWUtbmV4dC5vcmc=">NexT.Pisces</span> v7.7.1
+  </div>
+
+<div class="translate-style">
+繁/简：<a id="translateLink" href="javascript:translatePage();">繁体
+</a>
+</div>
+<script type="text/javascript" src="/js/tw_cn.js"></script>
+<script type="text/javascript">
+var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+var cookieDomain = "https://blog.kixcs.com/"; //Cookie地址, 一定要设定, 通常为你的网址
+var msgToTraditionalChinese = "繁体"; //此处可以更改为你想要显示的文字
+var msgToSimplifiedChinese = "简体"; //同上，但两处均不建议更改
+var translateButtonId = "translateLink"; //默认互换id
+translateInitilization();
+</script>
+
+
+<div>
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/11/2018 14:50:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已在风雨中度过 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='54,54,54' opacity='0.6' zIndex='-1' count='120' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout: 3000,
+        priority: true,
+        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/archives/adb7/',]
+      });
+      });
+  </script>
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://kixcs.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://blog.kixcs.com/archives/adb7/";
+    this.page.identifier = "archives/adb7/";
+    this.page.title = "树莓派配合frp内网穿透及ADS-B信号捕获的应用";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://kixcs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+
+  <script async src="/js/cursor/fireworks.js"></script>
+
+
+
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+
+    </div>
+
+  <!--崩溃欺骗
+#鸣谢：https://kuroha.vip/Hexo/next_theme_beautify
+-->
+  
+    <script type="text/javascript" src="/js/src/crash_cheat.js"></script>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+<!--
+# APlayer 配置信息及CDN资源加载
+# https://www.jsdelivr.com/package/npm/aplayer?path=dist
+# https://aplayer.js.org/#/zh-Hans/?id=cdn
+
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+-->
+
+
+
+</body>
+</html>
