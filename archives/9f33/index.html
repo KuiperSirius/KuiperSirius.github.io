@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Serif SC:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="RTL-SDR是一个具有DVB-T USB接口的接收器，该设备广泛应用于软件定义无线电领域，DVB-T接收器基于Realtek的RTL2832U芯片外加一个诸如Elonics E4000一类的高频头而构成。RTL2832U芯片有一些没有用到的命令&#x2F;寄存器，基于此便可将其配置使得可以将没有处理的原始的基带采样信号（可高达 2.8 MS&#x2F;s 8-bit I+Q)通过高速USB传递到PC，最后到达GN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenWebRX：配合RTL-SDR设备可视化SDRSharp">
+<meta property="og:url" content="https://blog.kixcs.com/archives/9f33/">
+<meta property="og:site_name" content="暮城雨烟">
+<meta property="og:description" content="RTL-SDR是一个具有DVB-T USB接口的接收器，该设备广泛应用于软件定义无线电领域，DVB-T接收器基于Realtek的RTL2832U芯片外加一个诸如Elonics E4000一类的高频头而构成。RTL2832U芯片有一些没有用到的命令&#x2F;寄存器，基于此便可将其配置使得可以将没有处理的原始的基带采样信号（可高达 2.8 MS&#x2F;s 8-bit I+Q)通过高速USB传递到PC，最后到达GN">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-28T14:39:19.000Z">
+<meta property="article:modified_time" content="2021-01-31T15:52:55.410Z">
+<meta property="article:author" content="夜阑听烟雨">
+<meta property="article:tag" content="OpenWebRX">
+<meta property="article:tag" content="RTL-SDR">
+<meta property="article:tag" content="SDRSharp">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.kixcs.com/archives/9f33/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>OpenWebRX：配合RTL-SDR设备可视化SDRSharp | 暮城雨烟</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158652489-2"></script>
+    <script pjax>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-158652489-2');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+
+
+
+<link rel="alternate" href="/atom.xml" title="暮城雨烟" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">暮城雨烟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">The Sound of Silence</h1>
+      
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-network">
+
+    <a href="/categories/network" rel="section"><i class="fa fa-fw fa-desktop"></i>网络</a>
+
+  </li>
+        <li class="menu-item menu-item-technique">
+
+    <a href="/categories/technique" rel="section"><i class="fa fa-fw fa-cubes"></i>技术</a>
+
+  </li>
+        <li class="menu-item menu-item-design">
+
+    <a href="/categories/design" rel="section"><i class="fa fa-fw fa-magic"></i>设计</a>
+
+  </li>
+        <li class="menu-item menu-item-thinking">
+
+    <a href="/categories/thinking" rel="section"><i class="fa fa-fw fa-coffee"></i>随想</a>
+
+  </li>
+        <li class="menu-item menu-item-literature">
+
+    <a href="/categories/literature" rel="section"><i class="fa fa-fw fa-book"></i>文学</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+  </ul>
+
+</nav>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/disqusjs@1.2.2/dist/disqus.js"></script>
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <span class="exturl github-corner" data-url="aHR0cHM6Ly9naXRodWIuY29tL0t1aXBlclNpcml1cw==" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></span>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.kixcs.com/archives/9f33/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
+      <meta itemprop="name" content="夜阑听烟雨">
+      <meta itemprop="description" content="夜半烟雨花千树 暮城挽歌月微凉">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="暮城雨烟">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          OpenWebRX：配合RTL-SDR设备可视化SDRSharp
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-28 22:39:19" itemprop="dateCreated datePublished" datetime="2021-01-28T22:39:19+08:00">2021-01-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-01-31 23:52:55" itemprop="dateModified" datetime="2021-01-31T23:52:55+08:00">2021-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technique/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/archives/9f33/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/9f33/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>16k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>14 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p class="description"></p>
+RTL-SDR是一个具有DVB-T USB接口的接收器，该设备广泛应用于软件定义无线电领域，DVB-T接收器基于Realtek的RTL2832U芯片外加一个诸如Elonics E4000一类的高频头而构成。RTL2832U芯片有一些没有用到的命令/寄存器，基于此便可将其配置使得可以将没有处理的原始的基带采样信号（可高达 2.8 MS/s 8-bit I+Q)通过高速USB传递到PC，最后到达GNURadio。而OpenWebRX是具有Web界面的多用户SDR接收器软件，较为遗憾的是该程序的作者已经宣布自2019年12月29日起不再维护该仓库。
+<a id="more"></a>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hhN2lsbS9vcGVud2Vicng=" title="https://github.com/ha7ilm/openwebrx">OpenWebRX<i class="fa fa-external-link"></i></span>可以支持基于csdr的解调器（AM/FM/SSB/CW/BPSK31），可以通过GUI设置滤波器通带，瀑布流显示并且可以向后移动，当前支持RTL-SDR，HackRF，SDRplay，AirSpy和许多其他设备，该Web界面运行于8073端口。</p>
+<p>唯一美中不足的是，该程序不支持广播电台的WFM，仅支持NFM方式。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>下面开始介绍手动安装OpenWebRX的过程，本人是基于Raspberry Pi 3的开发板，安装树莓派官方Pi Buster系统构建而来，具体关于frp的部分可以参考本人博客的另一篇文章：<a href="https://blog.kixcs.com/archives/adb7/">树莓派配合frp内网穿透及ADS-B信号捕获的应用</a>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">安装编译时必要的包</span></span><br><span class="line">root@pi:/home# curl https://raw.githubusercontent.com/bclswl0827/openwebrx-installer/master/rtl-sdr_installer.sh | bash</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">拉取 RTL-SDR 之驱动源码并编译</span></span><br><span class="line">root@pi:/home# git clone https://github.com/keenerd/rtl-sdr.git</span><br><span class="line">root@pi:/home# cd rtl-sdr</span><br><span class="line">root@pi:/home/rtl-sdr# mkdir build</span><br><span class="line">root@pi:/home/rtl-sdr# cd build</span><br><span class="line">root@pi:/home/rtl-sdr/build# cmake ../ -DDETACH_KERNEL_DRIVER=ON -DINSTALL_UDEV_RULES=ON</span><br><span class="line">root@pi:/home/rtl-sdr/build# make</span><br><span class="line">root@pi:/home/rtl-sdr/build# make install</span><br><span class="line">root@pi:/home/rtl-sdr/build# ldconfig</span><br><span class="line">root@pi:/home/rtl-sdr/build# cd /home</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">然后拉取OpenWebRX及其依赖项csdr的源码，并编译 csdr。</span></span><br><span class="line">root@pi:/home# git clone https://github.com/simonyiszk/openwebrx.git</span><br><span class="line">root@pi:/home# git clone https://github.com/jketterl/csdr</span><br><span class="line">root@pi:/home# cd csdr</span><br><span class="line">root@pi:/home/csdr# git checkout 32958ce37eb765f7f5511fe5f7c2c244c13f264b</span><br><span class="line">root@pi:/home/csdr# make</span><br><span class="line">root@pi:/home/csdr# make install</span><br><span class="line">root@pi:/home/csdr# cd /home</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">某些内核模块会锁定 USB 设备，需要在使用 SDR 设备之前将其禁用。</span></span><br><span class="line"><span class="meta">#</span><span class="bash">如果内核模块未正确列入黑名单，则可能会出现 Device not found 的错误。</span></span><br><span class="line">root@pi:/home# bash -c 'echo -e "\n# for RTL-SDR:\nblacklist dvb_usb_rtl28xxu\n" &gt;&gt; /etc/modprobe.d/blacklist.conf'</span><br><span class="line">root@pi:/home# update-initramfs -u</span><br><span class="line">root@pi:/home# rmmod dvb_usb_rtl28xxu</span><br><span class="line"><span class="meta">#</span><span class="bash">倘若执行第三条命令出现错误，属于正常现象，等待程序安装完成即可。</span></span><br></pre></td></tr></table></figure>
+
+<p>之后需要进行的就是测试该设备是否正常工作，插入 RTL-SDR，然后重启系统。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@pi:~# lsusb</span><br><span class="line">Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub</span><br><span class="line">Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</span><br><span class="line">Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub</span><br><span class="line">Bus 001 Device 002: ID 0bda:2838 Realtek Semiconductor Corp. RTL2838 DVB-T</span><br><span class="line">Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</span><br></pre></td></tr></table></figure>
+
+<p>列出 USB 设备，RTL-SDR 位列其中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@pi:~# cd /home/openwebrx</span><br><span class="line"><span class="meta">#</span><span class="bash">运行命令，可使用screen -S [screen_name]后台运行，screen -r [screen_name]恢复</span></span><br><span class="line"><span class="meta">#</span><span class="bash">Ctrl+a+d最小化 当然也可以写成service作为系统服务开机自动运行</span></span><br><span class="line">root@pi:/home/openwebrx# ./openwebrx.py</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>运行OpenWebRX以测试，倘若一切正常，命令行显示字样如下所示，即安装成功。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">OpenWebRX - Open Source SDR Web App for Everyone!  | for license see LICENSE file in the package</span><br><span class="line">_________________________________________________________________________________________________</span><br><span class="line"></span><br><span class="line">Author contact info:    Andras Retzler, HA7ILM &lt;randras@sdr.hu&gt;</span><br><span class="line"></span><br><span class="line">[openwebrx-main] Configuration script not specified. I will use: "config_webrx.py"</span><br><span class="line">[openwebrx-main] nmux_bufsize = 253952, nmux_bufcnt = 505</span><br><span class="line">[openwebrx-main] Started rtl_thread: rtl_sdr -D2 -s 2048000 -f 9500000 -p 0 -g 90 -| nmux --bufsize 253952 --bufcnt 505 --port 4951 --address 127.0.0.1</span><br><span class="line">[openwebrx-main] Waiting for I/Q server to start...</span><br><span class="line">nmux: listening on 127.0.0.1:4951</span><br><span class="line">Found 1 device(s):</span><br><span class="line">  0:  Realtek, RTL2838UHIDIR, SN: 00000001</span><br><span class="line"></span><br><span class="line">Using device 0: Generic RTL2832U OEM</span><br><span class="line">[openwebrx-main] I/Q server started.</span><br><span class="line">[openwebrx-main] Starting watchdog threads.</span><br><span class="line">nmux: pthread_create() done, clients now: 1</span><br><span class="line">client 0x231a0f8: started!</span><br><span class="line">[openwebrx-main] Starting spectrum thread.</span><br><span class="line">[openwebrx-spectrum] Spectrum thread initialized successfully.</span><br><span class="line">[openwebrx-dsp-plugin:csdr] Command = nc -v 127.0.0.1 4951 | csdr convert_u8_f | csdr fft_cc 2048 204 | csdr logaveragepower_cf -70 2048 1628 | csdr fft_exchange_sides_ff 2048 | csdr compress_fft_adpcm_f_u8 2048</span><br><span class="line">[openwebrx-main] Starting HTTP server.</span><br><span class="line">[openwebrx-spectrum] Spectrum thread started.</span><br><span class="line">nmux: pthread_create() done, clients now: 2</span><br><span class="line">client 0x231a1e0: started!</span><br><span class="line">Connection to 127.0.0.1 4951 port [tcp/*] succeeded!</span><br><span class="line">Found Rafael Micro R820T tuner</span><br><span class="line">Enabled direct sampling mode, input 2</span><br><span class="line">Enabled direct sampling mode, input 2/Q.</span><br><span class="line">Exact sample rate is: 20480000.026491 Hz</span><br><span class="line">Sampling at 20480000 S/s.</span><br><span class="line">Tuned to 9500000 Hz.</span><br><span class="line">Tuner gain set to 49.60 dB.</span><br><span class="line">Reading samples in async mode...</span><br><span class="line">Allocating 15 zero-copy buffers</span><br><span class="line">client 0x231a0f8: CS_THREAD_FINISHED, client_goto_source = 2, errno = 32</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义配置"><a href="#自定义配置" class="headerlink" title="自定义配置"></a>自定义配置</h3><p>修改配置文件config_webrx.py，该文件路径为：/home/openwebrx/config_webrx.py 。代码如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line">"""</span><br><span class="line">config_webrx: configuration options for OpenWebRX</span><br><span class="line"></span><br><span class="line">    This file is part of OpenWebRX,</span><br><span class="line">    an open-source SDR receiver software with a web UI.</span><br><span class="line">    Copyright (c) 2013-2015 by Andras Retzler &lt;randras@sdr.hu&gt;</span><br><span class="line"></span><br><span class="line">    This program is free software: you can redistribute it and/or modify</span><br><span class="line">    it under the terms of the GNU Affero General Public License as</span><br><span class="line">    published by the Free Software Foundation, either version 3 of the</span><br><span class="line">    License, or (at your option) any later version.</span><br><span class="line"></span><br><span class="line">    This program is distributed in the hope that it will be useful,</span><br><span class="line">    but WITHOUT ANY WARRANTY; without even the implied warranty of</span><br><span class="line">    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span><br><span class="line">    GNU Affero General Public License for more details.</span><br><span class="line"></span><br><span class="line">    You should have received a copy of the GNU Affero General Public License</span><br><span class="line">    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span><br><span class="line"></span><br><span class="line">    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span><br><span class="line"></span><br><span class="line">    In addition, as a special exception, the copyright holders</span><br><span class="line">    state that config_rtl.py and config_webrx.py are not part of the</span><br><span class="line">    Corresponding Source defined in GNU AGPL version 3 section 1.</span><br><span class="line"></span><br><span class="line">    (It means that you do not have to redistribute config_rtl.py and</span><br><span class="line">    config_webrx.py if you make any changes to these two configuration files,</span><br><span class="line">    and use them for running your web service with OpenWebRX.)</span><br><span class="line">"""</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> NOTE: you can find additional information about configuring OpenWebRX <span class="keyword">in</span> the Wiki:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">       https://github.com/simonyiszk/openwebrx/wiki</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ==== Server settings ====</span></span><br><span class="line">web_port=8073</span><br><span class="line">server_hostname="sdr.kixcs.com" # If this contains an incorrect value, the web UI may freeze on load (it can't open websocket)</span><br><span class="line">max_clients=20</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ==== Web GUI configuration ====</span></span><br><span class="line">receiver_name="RTL-SDR Radio"</span><br><span class="line">receiver_location="Zhengzhou , Henan, China"</span><br><span class="line">receiver_qra="OM64tr"</span><br><span class="line">receiver_asl=200</span><br><span class="line">receiver_ant="Longwire"</span><br><span class="line">receiver_device="RTL-SDR"</span><br><span class="line">receiver_admin="gyh1298058589@gmail.com"</span><br><span class="line">receiver_gps=(34.000, 114.000)</span><br><span class="line">photo_height=350</span><br><span class="line">photo_title="Panorama of Budapest from Sch枚nherz Zolt谩n Dormitory"</span><br><span class="line">photo_desc="""</span><br><span class="line">You can add your own background photo and receiver information.&lt;br /&gt;</span><br><span class="line">Receiver is operated by: &lt;a href="mailto:%[RX_ADMIN]"&gt;%[RX_ADMIN]&lt;/a&gt;&lt;br/&gt;</span><br><span class="line">Device: %[RX_DEVICE]&lt;br /&gt;</span><br><span class="line">Antenna: %[RX_ANT]&lt;br /&gt;</span><br><span class="line">Welcome to visit my Website: &lt;a href="https://kixcs.com" target="_blank"&gt;https://kixcs.com&lt;/a&gt;</span><br><span class="line">"""</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ==== sdr.hu listing ====</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> If you want your ham receiver to be listed publicly on sdr.hu, <span class="keyword">then</span> take the following steps:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 1. Register at: http://sdr.hu/register</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. You will get an unique key by email. Copy it and paste here:</span></span><br><span class="line">sdrhu_key = ""</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3. Set this setting to True to <span class="built_in">enable</span> listing:</span></span><br><span class="line">sdrhu_public_listing = False</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ==== DSP/RX settings ====</span></span><br><span class="line">fft_fps=9</span><br><span class="line">fft_size=4096 #Should be power of 2</span><br><span class="line">fft_voverlap_factor=0.3 #If fft_voverlap_factor is above 0, multiple FFTs will be used for creating a line on the diagram.</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> samp_rate = 250000</span></span><br><span class="line">samp_rate = 2048000</span><br><span class="line">center_freq = 93900000</span><br><span class="line">rf_gain = 0 #in dB. For an RTL-SDR, rf_gain=0 will set the tuner to auto gain mode, else it will be in manual gain mode.</span><br><span class="line">ppm = 0</span><br><span class="line"></span><br><span class="line">audio_compression="adpcm" #valid values: "adpcm", "none"</span><br><span class="line">fft_compression="adpcm" #valid values: "adpcm", "none"</span><br><span class="line"></span><br><span class="line">digimodes_enable=True #Decoding digimodes come with higher CPU usage. </span><br><span class="line">digimodes_fft_size=2048</span><br><span class="line"></span><br><span class="line">start_rtl_thread=True</span><br><span class="line"></span><br><span class="line">"""</span><br><span class="line">Note: if you experience audio underruns while CPU usage is 100%, you can: </span><br><span class="line">- decrease `samp_rate`,</span><br><span class="line">- set `fft_voverlap_factor` to 0,</span><br><span class="line">- decrease `fft_fps` and `fft_size`,</span><br><span class="line">- limit the number of users by decreasing `max_clients`.</span><br><span class="line">"""</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ==== I/Q sources ====</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> (Uncomment the appropriate by removing <span class="comment"># characters at the beginning of the corresponding lines.)</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">################################################################################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Is my SDR hardware supported?                                                                 <span class="comment">#</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Check here: https://github.com/simonyiszk/openwebrx/wiki<span class="comment">#guides-for-receiver-hardware-support #</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">################################################################################################</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> You can use other SDR hardware as well, by giving your own <span class="built_in">command</span> that outputs the I/Q samples... Some examples of configuration are available here (default is RTL-SDR):</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> &gt;&gt; RTL-SDR via rtl_sdr</span></span><br><span class="line"></span><br><span class="line">start_rtl_command="rtl_sdr -s &#123;samp_rate&#125; -f &#123;center_freq&#125; -p &#123;ppm&#125; -g &#123;rf_gain&#125; -".format(rf_gain=rf_gain, center_freq=center_freq, samp_rate=samp_rate, ppm=ppm)</span><br><span class="line"><span class="meta">#</span><span class="bash">start_rtl_command=<span class="string">"rtl_sdr -D2 -s &#123;samp_rate&#125; -f &#123;center_freq&#125; -p &#123;ppm&#125; -g &#123;rf_gain&#125; -"</span>.format(rf_gain=rf_gain, center_freq=center_freq, samp_rate=samp_rate, ppm=ppm) </span></span><br><span class="line">format_conversion="csdr convert_u8_f"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">lna_gain=8</span></span><br><span class="line"><span class="meta">#</span><span class="bash">rf_amp=1</span></span><br><span class="line"><span class="meta">#</span><span class="bash">start_rtl_command=<span class="string">"hackrf_transfer -s &#123;samp_rate&#125; -f &#123;center_freq&#125; -g &#123;rf_gain&#125; -l&#123;lna_gain&#125; -a&#123;rf_amp&#125; -r-"</span>.format(rf_gain=rf_gain, center_freq=center_freq, samp_rate=samp_rate, ppm=ppm, rf_amp=rf_amp, lna_gain=lna_gain)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">format_conversion=<span class="string">"csdr convert_s8_f"</span></span></span><br><span class="line">"""</span><br><span class="line">To use a HackRF, compile the HackRF host tools from its "stdout" branch:</span><br><span class="line"> git clone https://github.com/mossmann/hackrf/</span><br><span class="line"> cd hackrf</span><br><span class="line"> git fetch</span><br><span class="line"> git checkout origin/stdout</span><br><span class="line"> cd host</span><br><span class="line"> mkdir build</span><br><span class="line"> cd build</span><br><span class="line"> cmake .. -DINSTALL_UDEV_RULES=ON</span><br><span class="line"> make</span><br><span class="line"> sudo make install</span><br><span class="line">"""</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> &gt;&gt; Sound card SDR (needs ALSA)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> I did not have the chance to properly <span class="built_in">test</span> it.</span></span><br><span class="line"><span class="meta">#</span><span class="bash">samp_rate = 96000</span></span><br><span class="line"><span class="meta">#</span><span class="bash">start_rtl_command=<span class="string">"arecord -f S16_LE -r &#123;samp_rate&#125; -c2 -"</span>.format(samp_rate=samp_rate)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">format_conversion=<span class="string">"csdr convert_s16_f | csdr gain_ff 30"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> &gt;&gt; /dev/urandom <span class="built_in">test</span> signal <span class="built_in">source</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> samp_rate = 2400000</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> start_rtl_command=<span class="string">"cat /dev/urandom | (pv -qL `python -c 'print int(&#123;samp_rate&#125; * 2.2)'` 2&gt;&amp;1)"</span>.format(rf_gain=rf_gain, center_freq=center_freq, samp_rate=samp_rate)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> format_conversion=<span class="string">"csdr convert_u8_f"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> &gt;&gt; Pre-recorded raw I/Q file as signal <span class="built_in">source</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> You will have to correctly specify: samp_rate, center_freq, format_conversion <span class="keyword">in</span> order to correctly play an I/Q file.</span></span><br><span class="line"><span class="meta">#</span><span class="bash">start_rtl_command=<span class="string">"(while true; do cat my_iq_file.raw; done) | csdr flowcontrol &#123;sr&#125; 20 "</span>.format(sr=samp_rate*2*1.05)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">format_conversion=<span class="string">"csdr convert_u8_f"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">&gt;&gt; The rx_sdr <span class="built_in">command</span> works with a variety of SDR harware: RTL-SDR, HackRF, SDRplay, UHD, Airspy, Red Pitaya, audio devices, etc. </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> It will auto-detect your SDR hardware <span class="keyword">if</span> the following tools are installed:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * the vendor provided driver and library, </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * the vendor-specific SoapySDR wrapper library, </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> * and SoapySDR itself.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Check out this article on the OpenWebRX Wiki: https://github.com/simonyiszk/openwebrx/wiki/Using-rx_tools-with-OpenWebRX/</span></span><br><span class="line"><span class="meta">#</span><span class="bash">start_rtl_command=<span class="string">"rx_sdr -F CF32 -s &#123;samp_rate&#125; -f &#123;center_freq&#125; -p &#123;ppm&#125; -g &#123;rf_gain&#125; -"</span>.format(rf_gain=rf_gain, center_freq=center_freq, samp_rate=samp_rate, ppm=ppm)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">format_conversion=<span class="string">""</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> &gt;&gt; gr-osmosdr signal <span class="built_in">source</span> using GNU Radio (follow this guide: https://github.com/simonyiszk/openwebrx/wiki/Using-GrOsmoSDR-as-signal-source)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">start_rtl_command=<span class="string">"cat /tmp/osmocom_fifo"</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">format_conversion=<span class="string">""</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ==== Misc settings ====</span></span><br><span class="line"></span><br><span class="line">shown_center_freq = center_freq #you can change this if you use an upconverter</span><br><span class="line"></span><br><span class="line">client_audio_buffer_size = 5</span><br><span class="line"><span class="meta">#</span><span class="bash">increasing client_audio_buffer_size will:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> - also increase the latency</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> - decrease the chance of audio underruns</span></span><br><span class="line"></span><br><span class="line">start_freq = 93900000</span><br><span class="line">start_mod = "nfm" #nfm, am, lsb, usb, cw</span><br><span class="line"></span><br><span class="line">iq_server_port = 4951 #TCP port for ncat to listen on. It will send I/Q data over its connections, for internal use in OpenWebRX. It is only accessible from the localhost by default.</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">access_log = <span class="string">"~/openwebrx_access.log"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ==== Color themes ====</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">A guide is available to <span class="built_in">help</span> you <span class="built_in">set</span> these values: https://github.com/simonyiszk/openwebrx/wiki/Calibrating-waterfall-display-levels</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## default theme by teejez:</span></span></span><br><span class="line">waterfall_colors = "[0x000000ff,0x0000ffff,0x00ffffff,0x00ff00ff,0xffff00ff,0xff0000ff,0xff00ffff,0xffffffff]"</span><br><span class="line">waterfall_min_level = -89 #in dB</span><br><span class="line">waterfall_max_level = -18</span><br><span class="line">waterfall_auto_level_margin = (5, 40)</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## old theme by HA7ILM:</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">waterfall_colors = <span class="string">"[0x000000ff,0x2e6893ff, 0x69a5d0ff, 0x214b69ff, 0x9dc4e0ff,  0xfff775ff, 0xff8a8aff, 0xb20000ff]"</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">waterfall_min_level = -115 <span class="comment">#in dB</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">waterfall_max_level = 0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">waterfall_auto_level_margin = (20, 30)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#For the old colors, you might also want to set [fft_voverlap_factor] to 0.</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">Note: When the auto waterfall level button is clicked, the following happens:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   [waterfall_min_level] = [current_min_power_level] - [waterfall_auto_level_margin[0]]</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   [waterfall_max_level] = [current_max_power_level] + [waterfall_auto_level_margin[1]]</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   ___|____________________________________|____________________________________|____________________________________|___&gt; signal power</span></span><br><span class="line"><span class="meta">#</span><span class="bash">        \_waterfall_auto_level_margin[0]_/ |__ current_min_power_level          | \_waterfall_auto_level_margin[1]_/</span></span><br><span class="line"><span class="meta">#</span><span class="bash">                                                      current_max_power_level __|</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 3D view settings</span></span><br><span class="line">mathbox_waterfall_frequency_resolution = 128 #bins</span><br><span class="line">mathbox_waterfall_history_length = 10 #seconds</span><br><span class="line">mathbox_waterfall_colors = "[0x000000ff,0x2e6893ff, 0x69a5d0ff, 0x214b69ff, 0x9dc4e0ff,  0xfff775ff, 0xff8a8aff, 0xb20000ff]"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> === Experimental settings ===</span></span><br><span class="line"><span class="meta">#</span><span class="bash">Warning! The settings below are very experimental.</span></span><br><span class="line">csdr_dynamic_bufsize = False # This allows you to change the buffering mode of csdr.</span><br><span class="line">csdr_print_bufsizes = False  # This prints the buffer sizes used for csdr processes.</span><br><span class="line">csdr_through = False # Setting this True will print out how much data is going into the DSP chains.</span><br><span class="line"></span><br><span class="line">nmux_memory = 50 #in megabytes. This sets the approximate size of the circular buffer used by nmux.</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">Look up external IP address automatically from icanhazip.com, and use it as [server_hostname]</span></span><br><span class="line">"""</span><br><span class="line">print "[openwebrx-config] Detecting external IP address..."</span><br><span class="line">import urllib2</span><br><span class="line">server_hostname=urllib2.urlopen("http://icanhazip.com").read()[:-1]</span><br><span class="line">print "[openwebrx-config] External IP address detected:", server_hostname</span><br><span class="line">"""</span><br></pre></td></tr></table></figure>
+
+<h3 id="frp映射至公网"><a href="#frp映射至公网" class="headerlink" title="frp映射至公网"></a>frp映射至公网</h3><p>不用多说，这里介绍一种本人正在使用的通解通法，frp配置Nginx反向代理至frps端口来使用，下面给出Nginx虚拟主机配置文件。</p>
+<p>注:这里7080端口为frps服务端http代理端口，映射流程大抵为域名的https 443端口反向代理至frps http的7080端口，再在frpc（旁路由或者连接至互联网的本地设备的frp客户端）中设置自定义域名，设置http协议类型，远程端口7080，并且本地端口为该程序OpenWebRX的8073端口，即可完成映射。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">    &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name ***;</span><br><span class="line">        </span><br><span class="line">        if ($scheme = http ) &#123;</span><br><span class="line">        return 301 https://$host$request_uri;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line"> location /&#123;</span><br><span class="line">            proxy_pass http://127.0.0.1:7080/;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_hide_header X-Powered-By;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">       access_log  /home/wwwlogs/***;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">server</span><br><span class="line">    &#123;</span><br><span class="line">        listen 443 ssl http2;</span><br><span class="line">        server_name ***;</span><br><span class="line">        </span><br><span class="line">        ssl_certificate /usr/local/nginx/conf/ssl/kixcs.com/kixcs.com.cer;</span><br><span class="line">        ssl_certificate_key /usr/local/nginx/conf/ssl/kixcs.com/kixcs.com.key;</span><br><span class="line">        ssl_session_timeout 5m;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line">        ssl_ciphers "TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5";</span><br><span class="line">        ssl_session_cache builtin:1000 shared:SSL:10m;</span><br><span class="line">        # openssl dhparam -out /usr/local/nginx/conf/ssl/dhparam.pem 2048</span><br><span class="line">        ssl_dhparam /usr/local/nginx/conf/ssl/dhparam.pem;</span><br><span class="line"></span><br><span class="line">           location / &#123;</span><br><span class="line">              #关于frp与Nginx配合使用的问题：https://blog.csdn.net/rfrftt/article/details/89317529</span><br><span class="line">              #https://www.v2ex.com/t/378393</span><br><span class="line">              proxy_pass http://127.0.0.1:7080/;</span><br><span class="line">              proxy_ssl_server_name on;</span><br><span class="line">              proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">              proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">              proxy_set_header Host $host;</span><br><span class="line">              add_header Content-Security-Policy upgrade-insecure-requests;</span><br><span class="line">                        </span><br><span class="line">        &#125;</span><br><span class="line">             </span><br><span class="line">         location /ws/&#123;</span><br><span class="line">            proxy_pass http://127.0.0.1:7080/ws/;</span><br><span class="line">            proxy_redirect off;</span><br><span class="line">            proxy_http_version 1.1;</span><br><span class="line">            proxy_set_header Upgrade $http_upgrade;</span><br><span class="line">            proxy_set_header Connection "upgrade";</span><br><span class="line">            proxy_set_header Host $http_host;                       </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        access_log  /home/wwwlogs/***.log;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置WebSockets（可选）"><a href="#配置WebSockets（可选）" class="headerlink" title="配置WebSockets（可选）"></a>配置WebSockets（可选）</h3><p>关于WebSockets，能赘述的内容实在有限，在不开启CDN的情况下无需去考虑这个问题，倘若你希望你所有的二级域名都配置CDN，那么你需要考虑你的站点所选择的CDN是否支持WebSockets这种用于服务端主动推送协议（比方说弹幕，消息推送等待），Cloudflare CDN/阿里云的全站加速DCDN，抑或是腾讯云CDN应该都可以较为完善的支持该协议。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">纵然 CloudFlare 已经要求用户与服务器通信实现底层安全协议传输，但是OpenWebRX仍然会让用户与后端建立未加密的WebSocket连接，即ws://，而不是wss://。</span></span><br><span class="line"><span class="meta">#</span><span class="bash">所以接下来修改openwebrx.js这个文件（位于OpenWebRX目录的htdocs文件夹）第1698行，将 ws_url=<span class="string">"ws://"</span>+(window.location.origin.split(<span class="string">"://"</span>)[1])+<span class="string">"/ws/"</span>;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">修改为 ws_url=<span class="string">"wss://***/ws/"</span>;，这里的***填写你的域名。然后修改OpenWebRX的核心文件（位于OpenWebRX根目录）openwebrx.py，第673行，</span></span><br><span class="line"><span class="meta">#</span><span class="bash">将ws_url=<span class="string">"ws://"</span>+(window.location.origin.split(<span class="string">"://"</span>)[1])+<span class="string">"/ws/"</span>; 修改为 ws_url=<span class="string">"wss://***/ws/"</span>; 。最后重启OpenWebRX即可。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="终章"><a href="#终章" class="headerlink" title="终章"></a>终章</h3><p>感谢<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hhN2lsbS9vcGVud2Vicng=" title="https://github.com/ha7ilm/openwebrx">OpenWebRX官方Github仓库<i class="fa fa-external-link"></i></span>，<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLnNkci5odS8=" title="https://blog.sdr.hu/">OpenWebRX开发者<i class="fa fa-external-link"></i></span>，尤其感谢<span class="exturl" data-url="aHR0cHM6Ly9pYmNsLnVzL1JUTFNEUi1Nb2RpZnlpbmdfMjAxOTAzMjMv" title="https://ibcl.us/RTLSDR-Modifying_20190323/">一位优秀的高中生小伙伴<i class="fa fa-external-link"></i></span>一直以来给我的热心帮助和耐心解答，同时也祝你学业有成，天天开心:)</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>夜阑听烟雨
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.kixcs.com/archives/9f33/" title="OpenWebRX：配合RTL-SDR设备可视化SDRSharp">https://blog.kixcs.com/archives/9f33/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/OpenWebRX/" rel="tag"> OpenWebRX</a>
+              <a href="/tags/RTL-SDR/" rel="tag"> RTL-SDR</a>
+              <a href="/tags/SDRSharp/" rel="tag"> SDRSharp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/adb7/" rel="prev" title="树莓派配合frp内网穿透及ADS-B信号捕获的应用">
+      <i class="fa fa-chevron-left"></i> 树莓派配合frp内网穿透及ADS-B信号捕获的应用
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行"><span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义配置"><span class="nav-text">自定义配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#frp映射至公网"><span class="nav-text">frp映射至公网</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置WebSockets（可选）"><span class="nav-text">配置WebSockets（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#终章"><span class="nav-text">终章</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <a href="/">
+	<img class="site-author-image" itemprop="image" alt="夜阑听烟雨"
+      src="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
+	 </a>
+  <p class="site-author-name" itemprop="name">夜阑听烟雨</p>
+  <div class="site-description" itemprop="description">夜半烟雨花千树 暮城挽歌月微凉</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0t1aXBlclNpcml1cy8=" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;KuiperSirius&#x2F;"><i class="fa fa-fw fa-github"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnN1bW1lckBraXhjcy5jb20=" title="E-Mail → mailto:summer@kixcs.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly93d3cuaW5zdGFncmFtLmNvbS9taW5vcmR1c2t3b29kLw==" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;minorduskwood&#x2F;"><i class="fa fa-fw fa-instagram"></i>Instagram</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9EdXNrQXV0dW1u" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;DuskAutumn"><i class="fa fa-fw fa-twitter"></i>Twitter</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly90Lm1lL2xhcml4c2lyaXVz" title="Telegram → https:&#x2F;&#x2F;t.me&#x2F;larixsirius"><i class="fa fa-fw fa-telegram"></i>Telegram</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9zdGVhbWNvbW11bml0eS5jb20vaWQvVHdpbGlnaHRTdW1tZXI=" title="Steam → https:&#x2F;&#x2F;steamcommunity.com&#x2F;id&#x2F;TwilightSummer"><i class="fa fa-fw fa-steam"></i>Steam</span>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+    <div class="links-of-blogroll motion-element links-of-blogroll-block">
+      <div class="links-of-blogroll-title">
+        <!-- modify icon to fire by szw -->
+        <i class="fa fa-history fa-" aria-hidden="true"></i>
+        近期文章
+      </div>
+      <ul class="links-of-blogroll-list">
+        
+        
+          <li>
+            <a href="/archives/9f33/" title="OpenWebRX：配合RTL-SDR设备可视化SDRSharp" target="_blank">OpenWebRX：配合RTL-SDR设备可视化SDRSharp</a>
+          </li>
+        
+          <li>
+            <a href="/archives/adb7/" title="树莓派配合frp内网穿透及ADS-B信号捕获的应用" target="_blank">树莓派配合frp内网穿透及ADS-B信号捕获的应用</a>
+          </li>
+        
+          <li>
+            <a href="/archives/a971/" title="旁路由网关设置及联通光猫的若干注意事项" target="_blank">旁路由网关设置及联通光猫的若干注意事项</a>
+          </li>
+        
+          <li>
+            <a href="/archives/3b4e/" title="php目录列表程序：files.photo.gallery" target="_blank">php目录列表程序：files.photo.gallery</a>
+          </li>
+        
+          <li>
+            <a href="/archives/746d/" title="搭建一个基于PHP和MySQL的一言Hitokoto接口" target="_blank">搭建一个基于PHP和MySQL的一言Hitokoto接口</a>
+          </li>
+        
+      </ul>
+    </div>
+
+
+
+<div style="">
+  <canvas id="canvas" style="width:60%;">当前浏览器不支持canvas，请更换浏览器后再试</canvas>
+</div>
+<script>
+(function(){
+
+   var digit=
+    [
+        [
+            [0,0,1,1,1,0,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,0,1,1,0],
+            [0,0,1,1,1,0,0]
+        ],//0
+        [
+            [0,0,0,1,1,0,0],
+            [0,1,1,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [1,1,1,1,1,1,1]
+        ],//1
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,1,1],
+            [1,1,1,1,1,1,1]
+        ],//2
+        [
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//3
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,0],
+            [0,0,1,1,1,1,0],
+            [0,1,1,0,1,1,0],
+            [1,1,0,0,1,1,0],
+            [1,1,1,1,1,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,1,1]
+        ],//4
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,1,1,1,1,0],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//5
+        [
+            [0,0,0,0,1,1,0],
+            [0,0,1,1,0,0,0],
+            [0,1,1,0,0,0,0],
+            [1,1,0,0,0,0,0],
+            [1,1,0,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//6
+        [
+            [1,1,1,1,1,1,1],
+            [1,1,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,0,0,1,1,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0],
+            [0,0,1,1,0,0,0]
+        ],//7
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,1,1,0]
+        ],//8
+        [
+            [0,1,1,1,1,1,0],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [1,1,0,0,0,1,1],
+            [0,1,1,1,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,1,0],
+            [0,0,0,1,1,0,0],
+            [0,1,1,0,0,0,0]
+        ],//9
+        [
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,1,1,1,0,0],
+            [0,0,0,0,0,0,0]
+        ]//:
+    ];
+
+var canvas = document.getElementById('canvas');
+
+if(canvas.getContext){
+    var cxt = canvas.getContext('2d');
+    //声明canvas的宽高
+    var H = 100,W = 700;
+    canvas.height = H;
+    canvas.width = W;
+    cxt.fillStyle = '#f00';
+    cxt.fillRect(10,10,50,50);
+
+    //存储时间数据
+    var data = [];
+    //存储运动的小球
+    var balls = [];
+    //设置粒子半径
+    var R = canvas.height/20-1;
+    (function(){
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        //存储时间数字，由十位小时、个位小时、冒号、十位分钟、个位分钟、冒号、十位秒钟、个位秒钟这7个数字组成
+        data.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+    })();
+
+    /*生成点阵数字*/
+    function renderDigit(index,num){
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    cxt.beginPath();
+                    cxt.arc(14*(R+2)*index + j*2*(R+1)+(R+1),i*2*(R+1)+(R+1),R,0,2*Math.PI);
+                    cxt.closePath();
+                    cxt.fill();
+                }
+            }
+        }
+    }
+
+    /*更新时钟*/
+    function updateDigitTime(){
+        var changeNumArray = [];
+        var temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date());
+        var NewData = [];
+        NewData.push(temp[1],temp[2],10,temp[3],temp[4],10,temp[5],temp[6]);
+        for(var i = data.length-1; i >=0 ; i--){
+            //时间发生变化
+            if(NewData[i] !== data[i]){
+                //将变化的数字值和在data数组中的索引存储在changeNumArray数组中
+                changeNumArray.push(i+'_'+(Number(data[i])+1)%10);
+            }
+        }
+        //增加小球
+        for(var i = 0; i< changeNumArray.length; i++){
+            addBalls.apply(this,changeNumArray[i].split('_'));
+        }
+        data = NewData.concat();
+    }
+
+    /*更新小球状态*/
+    function updateBalls(){
+        for(var i = 0; i < balls.length; i++){
+            balls[i].stepY += balls[i].disY;
+            balls[i].x += balls[i].stepX;
+            balls[i].y += balls[i].stepY;
+            if(balls[i].x > W + R || balls[i].y > H + R){
+                balls.splice(i,1);
+                i--;
+            }
+        }
+    }
+
+    /*增加要运动的小球*/
+    function addBalls(index,num){
+        var numArray = [1,2,3];
+        var colorArray =  ["#3BE","#09C","#A6C","#93C","#9C0","#690","#FB3","#F80","#F44","#C00"];
+        for(var i = 0; i < digit[num].length; i++){
+            for(var j = 0; j < digit[num][i].length; j++){
+                if(digit[num][i][j] == 1){
+                    var ball = {
+                        x:14*(R+2)*index + j*2*(R+1)+(R+1),
+                        y:i*2*(R+1)+(R+1),
+                        stepX:Math.floor(Math.random() * 4 -2),
+                        stepY:-2*numArray[Math.floor(Math.random()*numArray.length)],
+                        color:colorArray[Math.floor(Math.random()*colorArray.length)],
+                        disY:1
+                    };
+                    balls.push(ball);
+                }
+            }
+        }
+    }
+
+    /*渲染*/
+    function render(){
+        //重置画布宽度，达到清空画布的效果
+        canvas.height = 100;
+        //渲染时钟
+        for(var i = 0; i < data.length; i++){
+            renderDigit(i,data[i]);
+        }
+        //渲染小球
+        for(var i = 0; i < balls.length; i++){
+            cxt.beginPath();
+            cxt.arc(balls[i].x,balls[i].y,R,0,2*Math.PI);
+            cxt.fillStyle = balls[i].color;
+            cxt.closePath();
+            cxt.fill();
+        }
+    }
+
+    clearInterval(oTimer);
+    var oTimer = setInterval(function(){
+        //更新时钟
+        updateDigitTime();
+        //更新小球状态
+        updateBalls();
+        //渲染
+        render();
+    },50);
+}
+
+})();
+</script>
+
+      </div>
+     
+     
+	 
+	 
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-cubes"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Twilight Summer</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">94k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:25</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0
+  </div>
+
+<div class="translate-style">
+繁/简：<a id="translateLink" href="javascript:translatePage();">繁体
+</a>
+</div>
+<script type="text/javascript" src="/js/tw_cn.js"></script>
+<script type="text/javascript">
+var defaultEncoding = 2; //网站编写字体是否繁体，1-繁体，2-简体
+var translateDelay = 0; //延迟时间,若不在前, 要设定延迟翻译时间, 如100表示100ms,默认为0
+var cookieDomain = "https://blog.kixcs.com/"; //Cookie地址, 一定要设定, 通常为你的网址
+var msgToTraditionalChinese = "繁体"; //此处可以更改为你想要显示的文字
+var msgToSimplifiedChinese = "简体"; //同上，但两处均不建议更改
+var translateButtonId = "translateLink"; //默认互换id
+translateInitilization();
+</script>
+
+
+<div>
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("04/11/2018 14:50:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已在风雨中度过 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='54,54,54' opacity='0.6' zIndex='-1' count='120' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      script.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+  <script src="//cdn.jsdelivr.net/npm/quicklink@1/dist/quicklink.umd.js"></script>
+  <script>
+      window.addEventListener('load', () => {
+      quicklink({
+        timeout: 3000,
+        priority: true,
+        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/archives/9f33/',]
+      });
+      });
+  </script>
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://kixcs.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://blog.kixcs.com/archives/9f33/";
+    this.page.identifier = "archives/9f33/";
+    this.page.title = "OpenWebRX：配合RTL-SDR设备可视化SDRSharp";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://kixcs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+
+  <script async src="/js/cursor/fireworks.js"></script>
+
+
+
+
+  <script src="/js/activate-power-mode.min.js"></script>
+  <script>
+    POWERMODE.colorful = true;
+    POWERMODE.shake = false;
+    document.body.addEventListener('input', POWERMODE);
+  </script>
+
+
+    </div>
+
+  <!--崩溃欺骗
+#鸣谢：https://kuroha.vip/Hexo/next_theme_beautify
+-->
+  
+    <script type="text/javascript" src="/js/src/crash_cheat.js"></script>
+  
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+<!--
+# APlayer 配置信息及CDN资源加载
+# https://www.jsdelivr.com/package/npm/aplayer?path=dist
+# https://aplayer.js.org/#/zh-Hans/?id=cdn
+
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+-->
+
+
+
+</body>
+</html>
