@@ -23,17 +23,20 @@
     var CONFIG = {"hostname":"blog.kixcs.com","root":"/","scheme":"Pisces","version":"7.7.1","exturl":true,"sidebar":{"position":"left","display":"hide","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="夜半烟雨花千树 暮城挽歌月微凉">
-<meta property="og:type" content="website">
-<meta property="og:title" content="暮城雨烟">
-<meta property="og:url" content="https://blog.kixcs.com/tags/Fonts/">
+  <meta name="description" content="先来看一段相关Github仓库README.md文档给出的简介：Dump 1090 is a Mode S decoder specifically designed for RTLSDR devices. The main features are: Robust decoding of weak messages, with mode1090 many users observed impr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Raspberry Pi独立配置ADS-B dump1090模块">
+<meta property="og:url" content="https://blog.kixcs.com/archives/dd76/">
 <meta property="og:site_name" content="暮城雨烟">
-<meta property="og:description" content="夜半烟雨花千树 暮城挽歌月微凉">
+<meta property="og:description" content="先来看一段相关Github仓库README.md文档给出的简介：Dump 1090 is a Mode S decoder specifically designed for RTLSDR devices. The main features are: Robust decoding of weak messages, with mode1090 many users observed impr">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-07T13:00:28.000Z">
+<meta property="article:modified_time" content="2021-02-07T13:38:58.389Z">
 <meta property="article:author" content="夜阑听烟雨">
+<meta property="article:tag" content="Raspberry Pi">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://blog.kixcs.com/tags/Fonts/">
+<link rel="canonical" href="https://blog.kixcs.com/archives/dd76/">
 
 
 <script id="page-configurations">
@@ -41,11 +44,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>标签: Fonts | 暮城雨烟</title>
+  <title>Raspberry Pi独立配置ADS-B dump1090模块 | 暮城雨烟</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-158652489-2"></script>
     <script pjax>
@@ -211,54 +214,183 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Fonts
-          <small>标签</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.kixcs.com/archives/dd76/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://cdn.jsdelivr.net/gh/KuiperSirius/larix.cc@v1.0.9/about/img/avatar_img.png">
+      <meta itemprop="name" content="夜阑听烟雨">
+      <meta itemprop="description" content="夜半烟雨花千树 暮城挽歌月微凉">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="暮城雨烟">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Raspberry Pi独立配置ADS-B dump1090模块
         </h2>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-02-07 21:00:28 / 修改时间：21:38:58" itemprop="dateCreated datePublished" datetime="2021-02-07T21:00:28+08:00">2021-02-07</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/technique/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/archives/dd76/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="archives/dd76/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h2 class="collection-header">2020</h2>
+        <p class="description"></p>
+先来看一段相关Github仓库README.md文档给出的简介：Dump 1090 is a Mode S decoder specifically designed for RTLSDR devices. The main features are: Robust decoding of weak messages, with mode1090 many users observed improved range compared to other popular decoders. Network support: TCP30003 stream (MSG5...), Raw packets, HTTP. Embedded HTTP server that displays the currently detected aircrafts on Google Map...
+<a id="more"></a>
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>使用Raspberry Pi接收ADS-B信号离不开<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FudGlyZXovZHVtcDEwOTA=" title="https://github.com/antirez/dump1090">dump1090<i class="fa fa-external-link"></i></span>模块，有人做好了<span class="exturl" data-url="aHR0cDovL3d3dy5zYXRzaWduYWwuZXUvcmFzcGJlcnJ5LXBpL2J1aWxkLTEwOTAuc2g=" title="http://www.satsignal.eu/raspberry-pi/build-1090.sh">脚本<i class="fa fa-external-link"></i></span>，下载执行就OK了，当然，也可自己输入指令分步执行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.satsignal.eu/raspberry-pi/build-1090.sh</span><br><span class="line">chmod +x build-1090.sh</span><br><span class="line">./build-1090.sh </span><br></pre></td></tr></table></figure>
+
+<h3 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h3><p>build-1090.sh内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade</span><br><span class="line">sudo printf 'blacklist dvb_usb_rtl28xxu\nblacklist rtl2832\nblacklist rtl2830' &gt; /etc/modprobe.d/nortl.conf</span><br><span class="line">sudo apt-get install git-core</span><br><span class="line">sudo apt-get install git</span><br><span class="line">sudo apt-get install cmake</span><br><span class="line">sudo apt-get install libusb-1.0-0-dev  </span><br><span class="line">sudo apt-get install build-essential </span><br><span class="line">git clone git://git.osmocom.org/rtl-sdr.git</span><br><span class="line">cd rtl-sdr</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake ../ -DINSTALL_UDEV_RULES=ON</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br><span class="line">sudo ldconfig</span><br><span class="line">cd ~</span><br><span class="line">sudo cp ./rtl-sdr/rtl-sdr.rules /etc/udev/rules.d/</span><br><span class="line">git clone git://github.com/MalcolmRobb/dump1090.git</span><br><span class="line">cd dump1090</span><br><span class="line">make</span><br><span class="line">sudo reboot</span><br></pre></td></tr></table></figure>
+<p>执行完后重启RPi，之后ssh登录，先用lsusb看看能不能发现rtl-sdr，然后执行如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rtl_test -t</span><br></pre></td></tr></table></figure>
+<p>如果出现下述错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Found 1 device(s):</span><br><span class="line">0: Generic RTL2832U</span><br><span class="line">Using device 0: Generic RTL2832U</span><br><span class="line">Kernel driver is active, or device is claimed by second instance of librtlsdr.</span><br><span class="line">In the first case, please either detach or blacklist the kernel module</span><br><span class="line">(dvb_usb_rtl28xxu), or enable automatic detaching at compile time.</span><br><span class="line">usb_claim_interface error -6</span><br><span class="line">Failed to open rtlsdr device #0.</span><br></pre></td></tr></table></figure>
+<p>是由于新版Raspbian内核已经集成了rtl-sdr的驱动，但是这个驱动不是我们需要的，所以要把这个驱动放入黑名单，重新安装osmocom的rtl-sdr驱动。</p>
+<p>在/etc/modprobe.d目录建立nortl.conf文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano nortl.conf</span><br></pre></td></tr></table></figure>
+<p>粘贴以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">blacklist dvb_usb_rtl28xxu</span><br><span class="line">blacklist rtl2832</span><br><span class="line">blacklist rtl2830</span><br></pre></td></tr></table></figure>
+<p>reboot之后生效。</p>
+<p>执行指令下面的命令，可以在终端看dump1090的输出。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./dump1090 --interactive</span><br></pre></td></tr></table></figure>
+
+<p>执行如下指令，能在本地的IP 8080端口看到dump1090的输出了（会调用Google Map API）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./dump1090 --interactive --net</span><br></pre></td></tr></table></figure>
+
+<h3 id="开机自启"><a href="#开机自启" class="headerlink" title="开机自启"></a>开机自启</h3><p>开机自动启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/init.d/dump1090.sh</span><br></pre></td></tr></table></figure>
+<p>粘贴以下内容：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## BEGIN INIT INFO</span></span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Provides:		dump1090</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Required-Start:	<span class="variable">$remote_fs</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Required-Stop:	<span class="variable">$remote_fs</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Default-Start:	2 3 4 5</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Default-Stop:		0 1 6</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Short-Description:	dump1090 initscript</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## END INIT INFO</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># Fill in name of program here.</span></span></span><br><span class="line">PROG="dump1090"</span><br><span class="line">PROG_PATH="/home/pi/dump1090"</span><br><span class="line">PROG_ARGS="--interactive --net --no-fix --net-ro-size 500  --net-ro-rate 5"</span><br><span class="line">PIDFILE="/var/run/dump1090.pid"</span><br><span class="line">  </span><br><span class="line">start() &#123;</span><br><span class="line">      if [ -e $PIDFILE ]; then</span><br><span class="line">          ## Program is running, exit with error.</span><br><span class="line">          echo "Error! $PROG is currently running!" 1&gt;&amp;2</span><br><span class="line">          exit 1</span><br><span class="line">      else</span><br><span class="line">          ## Change from /dev/null to something like /var/log/$PROG if you want to save output.</span><br><span class="line">          cd $PROG_PATH</span><br><span class="line">          ./$PROG $PROG_ARGS 2&gt;&amp;1 &gt;/dev/null &amp;</span><br><span class="line">          echo "$PROG started"</span><br><span class="line">          touch $PIDFILE</span><br><span class="line">      fi</span><br><span class="line">&#125;</span><br><span class="line">       </span><br><span class="line">stop() &#123;</span><br><span class="line">      if [ -e $PIDFILE ]; then</span><br><span class="line">          ## Program is running, so stop it</span><br><span class="line">         echo "$PROG is running"</span><br><span class="line">         killall $PROG</span><br><span class="line">         rm -f $PIDFILE</span><br><span class="line">         echo "$PROG stopped"</span><br><span class="line">      else</span><br><span class="line">          ## Program is not running, exit with error.</span><br><span class="line">          echo "Error! $PROG not started!" 1&gt;&amp;2</span><br><span class="line">          exit 1</span><br><span class="line">      fi</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># Check to see if we are running as root first.</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># Found at http://www.cyberciti.biz/tips/shell-root-user-check-script.html</span></span></span><br><span class="line">if [ "$(id -u)" != "0" ]; then</span><br><span class="line">      echo "This script must be run as root" 1&gt;&amp;2</span><br><span class="line">      exit 1</span><br><span class="line">fi</span><br><span class="line"> </span><br><span class="line">case "$1" in</span><br><span class="line">      start)</span><br><span class="line">          start</span><br><span class="line">          exit 0</span><br><span class="line">          ;;</span><br><span class="line">          stop)</span><br><span class="line">          stop</span><br><span class="line">          exit 0</span><br><span class="line">      ;;</span><br><span class="line">      reload|restart|force-reload)</span><br><span class="line">          stop</span><br><span class="line">          start</span><br><span class="line">          exit 0</span><br><span class="line">      ;;</span><br><span class="line">      **)</span><br><span class="line">          echo "Usage: $0 &#123;start|stop|reload&#125;" 1&gt;&amp;2</span><br><span class="line">          exit 1</span><br><span class="line">      ;;</span><br><span class="line">esac</span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+<p>然后执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x /etc/init.d/dump1090.sh</span><br><span class="line">sudo update-rc.d dump1090.sh defaults</span><br></pre></td></tr></table></figure>
+<p>reboot之后生效。</p>
+<p>如果想停止服务，执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/dump1090.sh stop</span><br></pre></td></tr></table></figure>
+<p>删除开机启动服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo update-rc.d -f dump1090.sh remove</span><br></pre></td></tr></table></figure>
+
+<p>鸣谢：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hbGNvbG1Sb2JiL2R1bXAxMDkw" title="https://github.com/MalcolmRobb/dump1090">@MalcolmRobb<i class="fa fa-external-link"></i></span> <span class="exturl" data-url="aHR0cHM6Ly9iaDNudm4uZ2l0aHViLmlvLzIwMTUvMDgvZHVtcF8xMDkwX3JwaS8=" title="https://bh3nvn.github.io/2015/08/dump_1090_rpi/">@bh3nvn<i class="fa fa-external-link"></i></span></p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
+        
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-03-03T21:56:39+08:00"
-              content="2020-03-03">
-          03-03
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>夜阑听烟雨
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.kixcs.com/archives/dd76/" title="Raspberry Pi独立配置ADS-B dump1090模块">https://blog.kixcs.com/archives/dd76/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC96aC1DTg=="><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <h3 class="post-title">
-          <a class="post-title-link" href="/archives/9e1/" itemprop="url">
-            <span itemprop="name">一些前端JS CDN开源库的国内镜像及Hexo相关配置</span>
-          </a>
-      </h3>
 
-    </header>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Raspberry-Pi/" rel="tag"> Raspberry Pi</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/8f4c/" rel="prev" title="搭建推送机器人Telegram bot实现消息推送">
+      <i class="fa fa-chevron-left"></i> 搭建推送机器人Telegram bot实现消息推送
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -305,6 +437,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建步骤"><span class="nav-text">搭建步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开机自启"><span class="nav-text">开机自启</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -862,7 +995,7 @@ window.addEventListener('pjax:success', () => {
       quicklink({
         timeout: 3000,
         priority: true,
-        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/tags/Fonts/',]
+        ignores: [uri => uri.includes('#'),uri => uri == 'https://blog.kixcs.com/archives/dd76/',]
       });
       });
   </script>
@@ -876,6 +1009,26 @@ window.addEventListener('pjax:success', () => {
   }
   // defer loading until the whole page loading is completed
   window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://blog.kixcs.com/archives/dd76/";
+    this.page.identifier = "archives/dd76/";
+    this.page.title = "Raspberry Pi独立配置ADS-B dump1090模块";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://kixcs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
 
 

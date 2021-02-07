@@ -31,7 +31,7 @@
 <meta property="og:description" content="RTL-SDR是一个具有DVB-T USB接口的接收器，该设备广泛应用于软件定义无线电领域，DVB-T接收器基于Realtek的RTL2832U芯片外加一个诸如Elonics E4000一类的高频头而构成。RTL2832U芯片有一些没有用到的命令&#x2F;寄存器，基于此便可将其配置使得可以将没有处理的原始的基带采样信号（可高达 2.8 MS&#x2F;s 8-bit I+Q)通过高速USB传递到PC，最后到达GN">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-01-28T14:39:19.000Z">
-<meta property="article:modified_time" content="2021-01-31T15:52:55.410Z">
+<meta property="article:modified_time" content="2021-02-07T13:37:48.592Z">
 <meta property="article:author" content="夜阑听烟雨">
 <meta property="article:tag" content="OpenWebRX">
 <meta property="article:tag" content="RTL-SDR">
@@ -251,7 +251,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-01-31 23:52:55" itemprop="dateModified" datetime="2021-01-31T23:52:55+08:00">2021-01-31</time>
+                <time title="修改时间：2021-02-07 21:37:48" itemprop="dateModified" datetime="2021-02-07T21:37:48+08:00">2021-02-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -327,10 +327,11 @@ RTL-SDR是一个具有DVB-T USB接口的接收器，该设备广泛应用于软�
 <p>注:这里7080端口为frps服务端http代理端口，映射流程大抵为域名的https 443端口反向代理至frps http的7080端口，再在frpc（旁路由或者连接至互联网的本地设备的frp客户端）中设置自定义域名，设置http协议类型，远程端口7080，并且本地端口为该程序OpenWebRX的8073端口，即可完成映射。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">    &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name ***;</span><br><span class="line">        </span><br><span class="line">        if ($scheme = http ) &#123;</span><br><span class="line">        return 301 https://$host$request_uri;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line"> location /&#123;</span><br><span class="line">            proxy_pass http://127.0.0.1:7080/;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_hide_header X-Powered-By;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">       access_log  /home/wwwlogs/***;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">server</span><br><span class="line">    &#123;</span><br><span class="line">        listen 443 ssl http2;</span><br><span class="line">        server_name ***;</span><br><span class="line">        </span><br><span class="line">        ssl_certificate /usr/local/nginx/conf/ssl/kixcs.com/kixcs.com.cer;</span><br><span class="line">        ssl_certificate_key /usr/local/nginx/conf/ssl/kixcs.com/kixcs.com.key;</span><br><span class="line">        ssl_session_timeout 5m;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line">        ssl_ciphers "TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5";</span><br><span class="line">        ssl_session_cache builtin:1000 shared:SSL:10m;</span><br><span class="line">        # openssl dhparam -out /usr/local/nginx/conf/ssl/dhparam.pem 2048</span><br><span class="line">        ssl_dhparam /usr/local/nginx/conf/ssl/dhparam.pem;</span><br><span class="line"></span><br><span class="line">           location / &#123;</span><br><span class="line">              #关于frp与Nginx配合使用的问题：https://blog.csdn.net/rfrftt/article/details/89317529</span><br><span class="line">              #https://www.v2ex.com/t/378393</span><br><span class="line">              proxy_pass http://127.0.0.1:7080/;</span><br><span class="line">              proxy_ssl_server_name on;</span><br><span class="line">              proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">              proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">              proxy_set_header Host $host;</span><br><span class="line">              add_header Content-Security-Policy upgrade-insecure-requests;</span><br><span class="line">                        </span><br><span class="line">        &#125;</span><br><span class="line">             </span><br><span class="line">         location /ws/&#123;</span><br><span class="line">            proxy_pass http://127.0.0.1:7080/ws/;</span><br><span class="line">            proxy_redirect off;</span><br><span class="line">            proxy_http_version 1.1;</span><br><span class="line">            proxy_set_header Upgrade $http_upgrade;</span><br><span class="line">            proxy_set_header Connection "upgrade";</span><br><span class="line">            proxy_set_header Host $http_host;                       </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        access_log  /home/wwwlogs/***.log;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="配置WebSockets（可选）"><a href="#配置WebSockets（可选）" class="headerlink" title="配置WebSockets（可选）"></a>配置WebSockets（可选）</h3><p>关于WebSockets，能赘述的内容实在有限，在不开启CDN的情况下无需去考虑这个问题，倘若你希望你所有的二级域名都配置CDN，那么你需要考虑你的站点所选择的CDN是否支持WebSockets这种用于服务端主动推送协议（比方说弹幕，消息推送等待），Cloudflare CDN/阿里云的全站加速DCDN，抑或是腾讯云CDN应该都可以较为完善的支持该协议。</p>
+<h3 id="配置WebSockets（可选）"><a href="#配置WebSockets（可选）" class="headerlink" title="配置WebSockets（可选）"></a>配置WebSockets（可选）</h3><p>关于这部分内容，详细步骤可以移步开发者<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hhN2lsbS9vcGVud2Vicngvd2lraS9TcGVlZC11cC0mLVNlY3VyZS13aXRoLUNsb3VkRmxhcmU=" title="https://github.com/ha7ilm/openwebrx/wiki/Speed-up-&-Secure-with-CloudFlare">ha7ilm<i class="fa fa-external-link"></i></span>的Github仓库，在此感谢<span class="exturl" data-url="aHR0cHM6Ly9pYmNsLnVzL1JUTFNEUi1Nb2RpZnlpbmdfMjAxOTAzMjMv" title="https://ibcl.us/RTLSDR-Modifying_20190323/">ibcl.us<i class="fa fa-external-link"></i></span>做出的汉化工作。</p>
+<p>关于WebSockets，能赘述的内容实在有限，在不开启CDN的情况下无需去考虑这个问题，倘若你希望你所有的二级域名都配置CDN，那么你需要考虑你的站点所选择的CDN是否支持WebSockets这种用于服务端主动推送协议（比方说弹幕，消息推送等待），Cloudflare CDN/阿里云的全站加速DCDN，抑或是腾讯云CDN应该都可以较为完善的支持该协议。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">纵然 CloudFlare 已经要求用户与服务器通信实现底层安全协议传输，但是OpenWebRX仍然会让用户与后端建立未加密的WebSocket连接，即ws://，而不是wss://。</span></span><br><span class="line"><span class="meta">#</span><span class="bash">所以接下来修改openwebrx.js这个文件（位于OpenWebRX目录的htdocs文件夹）第1698行，将 ws_url=<span class="string">"ws://"</span>+(window.location.origin.split(<span class="string">"://"</span>)[1])+<span class="string">"/ws/"</span>;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">修改为 ws_url=<span class="string">"wss://***/ws/"</span>;，这里的***填写你的域名。然后修改OpenWebRX的核心文件（位于OpenWebRX根目录）openwebrx.py，第673行，</span></span><br><span class="line"><span class="meta">#</span><span class="bash">将ws_url=<span class="string">"ws://"</span>+(window.location.origin.split(<span class="string">"://"</span>)[1])+<span class="string">"/ws/"</span>; 修改为 ws_url=<span class="string">"wss://***/ws/"</span>; 。最后重启OpenWebRX即可。</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="终章"><a href="#终章" class="headerlink" title="终章"></a>终章</h3><p>感谢<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hhN2lsbS9vcGVud2Vicng=" title="https://github.com/ha7ilm/openwebrx">OpenWebRX官方Github仓库<i class="fa fa-external-link"></i></span>，<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLnNkci5odS8=" title="https://blog.sdr.hu/">OpenWebRX开发者<i class="fa fa-external-link"></i></span>，尤其感谢<span class="exturl" data-url="aHR0cHM6Ly9pYmNsLnVzL1JUTFNEUi1Nb2RpZnlpbmdfMjAxOTAzMjMv" title="https://ibcl.us/RTLSDR-Modifying_20190323/">一位优秀的高中生小伙伴<i class="fa fa-external-link"></i></span>一直以来给我的热心帮助和耐心解答，同时也祝你学业有成，天天开心:)</p>
+<h3 id="终章"><a href="#终章" class="headerlink" title="终章"></a>终章</h3><p>感谢<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hhN2lsbS9vcGVud2Vicng=" title="https://github.com/ha7ilm/openwebrx">OpenWebRX官方Github仓库<i class="fa fa-external-link"></i></span>，<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLnNkci5odS8=" title="https://blog.sdr.hu/">OpenWebRX开发者<i class="fa fa-external-link"></i></span>，尤其感谢<span class="exturl" data-url="aHR0cHM6Ly9pYmNsLnVzL1JUTFNEUi1Nb2RpZnlpbmdfMjAxOTAzMjMv" title="https://ibcl.us/RTLSDR-Modifying_20190323/">一位优秀的高中生小伙伴<i class="fa fa-external-link"></i></span>一直以来给我的热心帮助和耐心解答，同时也祝你学业有成，天天开心 :)</p>
 
     </div>
 
@@ -459,7 +460,7 @@ RTL-SDR是一个具有DVB-T USB接口的接收器，该设备广泛应用于软�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -513,6 +514,10 @@ RTL-SDR是一个具有DVB-T USB接口的接收器，该设备广泛应用于软�
         
         
           <li>
+            <a href="/archives/dd76/" title="Raspberry Pi独立配置ADS-B dump1090模块" target="_blank">Raspberry Pi独立配置ADS-B dump1090模块</a>
+          </li>
+        
+          <li>
             <a href="/archives/8f4c/" title="搭建推送机器人Telegram bot实现消息推送" target="_blank">搭建推送机器人Telegram bot实现消息推送</a>
           </li>
         
@@ -526,10 +531,6 @@ RTL-SDR是一个具有DVB-T USB接口的接收器，该设备广泛应用于软�
         
           <li>
             <a href="/archives/a971/" title="旁路由网关设置及联通光猫的若干注意事项" target="_blank">旁路由网关设置及联通光猫的若干注意事项</a>
-          </li>
-        
-          <li>
-            <a href="/archives/3b4e/" title="php目录列表程序：files.photo.gallery" target="_blank">php目录列表程序：files.photo.gallery</a>
           </li>
         
       </ul>
@@ -832,13 +833,13 @@ if(canvas.getContext){
       <i class="fa fa-area-chart"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">102k</span>
+    <span title="站点总字数">105k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">1:33</span>
+    <span title="站点阅读时长">1:36</span>
 </div>
   <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v4.2.0
   </div>
