@@ -13,6 +13,31 @@ const ap = new APlayer({
  "lrc":"https://cdn.twili.club/songs/June.json"
  },
  {
+"name":"\u96e8\u591c",
+"artist":"\u56db\u5b63\u97f3\u8272",
+"url":"https://cdn.twili.club/songs/Rain.mp3",
+"cover":"https://cdn.twili.club/songs/Rain.jpg",
+"lrc":"https://cdn.twili.club/songs/Rain.json"
+},
+{"name":"End Of The Night",
+"artist":"Danny Avila",
+"url":"https://cdn.twili.club/songs/End-Of-The-Night.mp3",
+"cover":"https://cdn.twili.club/songs/End-Of-The-Night.jpg",
+"lrc":"https://cdn.twili.club/songs/End-Of-The-Night.json"
+},
+{"name":"\u56a3\u5f20",
+"artist":"en",
+"url":"https://cdn.twili.club/songs/crazy.mp3",
+"cover":"https://cdn.twili.club/songs/crazy.jpg",
+"lrc":"https://cdn.twili.club/songs/crazy.json"
+},
+{"name":"\u590f\u5929\u7684\u98ce",
+"artist":"\u6e29\u5c9a",
+ "url":"https://cdn.twili.club/songs/Summer-wind.mp3",
+ "cover":"https://cdn.twili.club/songs/Summer-wind.jpg",
+ "lrc":"https://cdn.twili.club/songs/Summer-wind.json"
+},
+ {
  "name":"Illusionary Daytime",
  "artist":"Shirfine",
  "url":"https://cdn.twili.club/songs/Illusionary_Daytime.mp3",
